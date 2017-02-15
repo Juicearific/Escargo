@@ -9,7 +9,6 @@ public class WaterScript : PowerUpEffectScript
 
     public override void addEffect()
     {
-        Debug.Log(name + "invoked addEffect");
         int numOfTics = Mathf.FloorToInt(powerUpDur / ticDuration);
         StartCoroutine(tic(numOfTics));
     }
