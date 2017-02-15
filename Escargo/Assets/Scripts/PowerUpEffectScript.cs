@@ -20,10 +20,8 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
 
     IEnumerator powerUpTimer(int timer)
     {
-        Debug.Log("Initial Stats: Speed: " + GetComponent<PlayerScript>().moveSpeed + " Slime: " + GetComponent<PlayerScript>().slime);
         yield return new WaitForSeconds(timer);
         removeEffect();
-        Debug.Log("Final Stats: Speed: " + GetComponent<PlayerScript>().moveSpeed + " Slime: " + GetComponent<PlayerScript>().slime);
         Destroy(this);
     }
 
