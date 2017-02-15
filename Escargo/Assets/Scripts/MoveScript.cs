@@ -3,7 +3,6 @@ using System.Collections;
 
 public class MoveScript : MonoBehaviour
 {
-    public float moveSpeed = 2f;
     public string upKey = "w";
     public string downKey = "s";
     public string leftKey = "a";
@@ -37,6 +36,7 @@ public class MoveScript : MonoBehaviour
             targetVelocity = Vector2.zero;
 
         }
+        float moveSpeed = gameObject.GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Rigidbody2D>().velocity = targetVelocity * moveSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0,0,0,0);
     }
