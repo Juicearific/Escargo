@@ -21,7 +21,6 @@ public class MoveScript : MonoBehaviour
     Stack<int> snaillingsMove = new Stack<int>();
     public float snailStartX;
     public float snailStartY;
-    public float moveSpeed = gameObject.GetComponent<PlayerScript>().moveSpeed;
 
     void Start()
     {
@@ -139,7 +138,7 @@ public class MoveScript : MonoBehaviour
     void moveChar(Vector2 targetVelocity)
     {
         setSlime();
-        GetComponent<Rigidbody2D>().velocity = targetVelocity * moveSpeed;
+        GetComponent<Rigidbody2D>().velocity = targetVelocity * gameObject.GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
 
