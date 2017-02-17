@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
 public class MoveScript : MonoBehaviour
 {
-    public float moveSpeed = 2f;
     public string upKey = "w";
     public string downKey = "s";
     public string leftKey = "a";
@@ -54,6 +52,7 @@ public class MoveScript : MonoBehaviour
         }
         else if (Input.GetKey(upKey))
         {
+
             moveChar(Vector2.up);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y + moveSpeed));
         }
@@ -139,7 +138,7 @@ public class MoveScript : MonoBehaviour
     void moveChar(Vector2 targetVelocity)
     {
         setSlime();
-        GetComponent<Rigidbody2D>().velocity = targetVelocity * moveSpeed;
+        GetComponent<Rigidbody2D>().velocity = targetVelocity * gameObject.GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
 
