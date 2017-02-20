@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
 public class MoveScript : MonoBehaviour
 {
     public string upKey = "w";
     public string downKey = "s";
     public string leftKey = "a";
     public string rightKey = "d";
+    public string slimeKey = "e";
     public int playerID = 1;
     public Object snaillingsSprite;
     public const int numSnaillings = 10;
@@ -21,6 +23,7 @@ public class MoveScript : MonoBehaviour
     Stack<int> snaillingsMove = new Stack<int>();
     public float snailStartX;
     public float snailStartY;
+    private bool placeSlime = false;
 
     void Start()
     {
@@ -32,8 +35,18 @@ public class MoveScript : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        /* Slime Trigger */
+        if (Input.GetKeyUp(slimeKey))
+        {
+            placeSlime = !placeSlime;
+        }
+    }
+
     void FixedUpdate()
     {
+
         /* movement */
         if (Input.GetKey(rightKey))
         {
@@ -56,8 +69,7 @@ public class MoveScript : MonoBehaviour
             moveChar(Vector2.up);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y + moveSpeed));
         }
-        else
-        {
+        else {
             moveChar(Vector2.zero);
         }
 
@@ -80,7 +92,6 @@ public class MoveScript : MonoBehaviour
             {
                 if (findPath(snaillings[i]))
                 {
-                    Debug.Log("taking path");
                     takePath(snaillings[i]);
                 }
             }
@@ -137,7 +148,8 @@ public class MoveScript : MonoBehaviour
 
     void moveChar(Vector2 targetVelocity)
     {
-        setSlime();
+        if (placeSlime)
+            setSlime();
         GetComponent<Rigidbody2D>().velocity = targetVelocity * gameObject.GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
@@ -149,7 +161,13 @@ public class MoveScript : MonoBehaviour
         if (slimeGrid[gridX,gridY] == 0) // will need to be changed once we have multiple players
         {
             slimeGrid[gridX, gridY] = playerID;
-            Object.Instantiate(slimeSprite, new Vector3(((float)gridX)+.5f,((float)gridY)+.5f,0), Quaternion.identity);
+            int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
+            if (slimeAmt >= 0)
+            {
+                GetComponent<PlayerScript>().slime = slimeAmt;
+                Object.Instantiate(slimeSprite, new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
+                GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
+            }
         }
     }
 }
