@@ -14,6 +14,6 @@ public class PlayerScript : MonoBehaviour {
 
     void Start()
     {
-        slider.maxValue = SLIME_MAX;
+       // slider.maxValue = SLIME_MAX;
     }
 }
