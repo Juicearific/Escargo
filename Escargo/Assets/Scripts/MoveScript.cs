@@ -4,36 +4,22 @@ using System.Collections.Generic;
 
 public class MoveScript : MonoBehaviour
 {
-    public string upKey = "w";
-    public string downKey = "s";
-    public string leftKey = "a";
-    public string rightKey = "d";
-    public string slimeKey = "e";
-    public int playerID = 1;
-    public Object snaillingsSprite;
-    public const int numSnaillings = 10;
-    GameObject[] snaillings = new GameObject[numSnaillings];
-    int currentSnail = 0;
-    float spawnTimer = 10.0f;
-    float moveTimer = 0.0f;
-    public Object slimeSprite;
-    public const int height = 25;
-    public const int width = 50;
-    public int[,] slimeGrid = new int[width, height];
-    Stack<int> snaillingsMove = new Stack<int>();
-    public float snailStartX;
-    public float snailStartY;
-    private bool placeSlime = false;
 
-    void Start()
-    {
-        snailStartX = GetComponent<Transform>().position.x;
-        snailStartY = GetComponent<Transform>().position.y;
-        for (int i = 0; i < numSnaillings; i++)
-        {
-            snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -1), Quaternion.identity);
-        }
-    }
+    /* Constants */
+    public const int HEIGHT = 25;
+    public const int WIDTH = 50;
+
+    /* Public Variables */
+    public Object slimeSprite;
+    public int[,] slimeGrid = new int[WIDTH, HEIGHT];
+
+    /* Private Variables */
+    private bool placeSlime = false;
+    private string upKey = "w";
+    private string downKey = "s";
+    private string leftKey = "a";
+    private string rightKey = "d";
+    private string slimeKey = "e";
 
     void Update()
     {
@@ -73,77 +59,7 @@ public class MoveScript : MonoBehaviour
             moveChar(Vector2.zero);
         }
 
-        /* snaillings spawn */
-        spawnTimer += Time.deltaTime;
-        if (spawnTimer >= 10.0f && currentSnail < numSnaillings)
-        {
-            spawnTimer = 0f;
-            snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
-                snaillings[currentSnail].transform.position.y, -1);
-            currentSnail++;
-        }
-        /* snailings move */
-        moveTimer += Time.deltaTime;
-        if (moveTimer >= .5f)
-        {
-            moveTimer = 0f;
-            //Debug.Log("moving");
-            for (int i = 0; i < currentSnail; i++)
-            {
-                if (findPath(snaillings[i]))
-                {
-                    takePath(snaillings[i]);
-                }
-            }
-        }
-    }
-
-    bool findPath(GameObject snail)
-    {
-        int gridX = (int)snail.GetComponent<Transform>().position.x;
-        int gridY = (int)snail.GetComponent<Transform>().position.y;
-        if (gridX + 1 < width && slimeGrid[gridX + 1, gridY] == playerID) // forward
-        {
-            snaillingsMove.Push(1);
-            return true;
-        }
-        else if (gridY + 1 < height && slimeGrid[gridX, gridY + 1] == playerID) { // up
-            snaillingsMove.Push(2);
-            return true;
-        }
-        else if (gridY - 1 >= 0 && slimeGrid[gridX, gridY - 1] == playerID) { // down
-            snaillingsMove.Push(-2);
-            return true;
-        }
-        else if (gridX -1 >= 0 && slimeGrid[gridX - 1, gridY] == playerID) { // backwards
-            snaillingsMove.Push(-1);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    void takePath(GameObject snail)
-    {
-        while (snaillingsMove.Count > 0)
-        {
-            int m = snaillingsMove.Pop();
-            switch (m)
-            {
-                case -1:
-                    snail.transform.position = new Vector3(snail.transform.position.x- .05f, snail.transform.position.y, 0);
-                    break;
-                case 1:
-                    snail.transform.position = new Vector3(snail.transform.position.x + .05f, snail.transform.position.y, 0);
-                    break;
-                case -2:
-                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y- .05f, 0);
-                    break;
-                case 2:
-                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y + .05f, 0);
-                    break;
-            }
-        }
+        
     }
 
     void moveChar(Vector2 targetVelocity)
@@ -160,7 +76,7 @@ public class MoveScript : MonoBehaviour
         int gridY = (int)GetComponent<Transform>().position.y;
         if (slimeGrid[gridX,gridY] == 0) // will need to be changed once we have multiple players
         {
-            slimeGrid[gridX, gridY] = playerID;
+            slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
             if (slimeAmt >= 0)
             {
