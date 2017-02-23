@@ -14,9 +14,10 @@ public class SnaillingScript : MonoBehaviour {
 
     /* Private Variables */
     private int currentSnail = 0;
-    private float spawnTimer = 10.0f;
+    private float spawnTimer = 0.0f;
     private float moveTimer = 0.0f;
     private Stack<int> snaillingsMove = new Stack<int>();
+    private int[,] snaillingsGrid = new int[MoveScript.WIDTH, MoveScript.HEIGHT];
     private float snailStartX;
     private float snailStartY;
 
@@ -35,7 +36,7 @@ public class SnaillingScript : MonoBehaviour {
     void FixedUpdate () {
         /* snaillings spawn */
         spawnTimer += Time.deltaTime;
-        if (spawnTimer >= 10.0f && currentSnail < NUM_SNAILLINGS)
+        if (spawnTimer >= 5f && currentSnail < NUM_SNAILLINGS)
         {
             spawnTimer = 0f;
             snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
@@ -46,14 +47,14 @@ public class SnaillingScript : MonoBehaviour {
         }
         /* snailings move */
         moveTimer += Time.deltaTime;
-        if (moveTimer >= .5f)
+        if (moveTimer >= 2f)
         {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
                 if (snaillings[i] != null)
                 {
-                    if (findPath(snaillings[i]))
+                    if (findPath(snaillings[i], i+1))
                     {
                         takePath(snaillings[i]);
                     }
@@ -62,30 +63,34 @@ public class SnaillingScript : MonoBehaviour {
         }
     }
 
-    bool findPath(GameObject snail)
+    bool findPath(GameObject snail, int sID)
     {
         int gridX = (int)snail.GetComponent<Transform>().position.x;
         int gridY = (int)snail.GetComponent<Transform>().position.y;
         int playerID = GetComponent<PlayerScript>().playerID;
         int[,] slimeGrid = GetComponent<MoveScript>().slimeGrid;
-        if (gridX + 1 < MoveScript.WIDTH && slimeGrid[gridX + 1, gridY] == playerID) // forward
+        if (gridX + 1 < MoveScript.WIDTH && slimeGrid[gridX + 1, gridY] == playerID && snaillingsGrid[gridX + 1, gridY] != sID) // forward
         {
             snaillingsMove.Push(1);
+            snaillingsGrid[gridX + 1, gridY] = sID; // visited
             return true;
         }
-        else if (gridY + 1 < MoveScript.HEIGHT && slimeGrid[gridX, gridY + 1] == playerID)
+        else if (gridY + 1 < MoveScript.HEIGHT && slimeGrid[gridX, gridY + 1] == playerID && snaillingsGrid[gridX, gridY + 1] != sID)
         { // up
             snaillingsMove.Push(2);
+            snaillingsGrid[gridX, gridY + 1] = sID; // visited
             return true;
         }
-        else if (gridY - 1 >= 0 && slimeGrid[gridX, gridY - 1] == playerID)
+        else if (gridY - 1 >= 0 && slimeGrid[gridX, gridY - 1] == playerID && snaillingsGrid[gridX, gridY - 1] != sID)
         { // down
             snaillingsMove.Push(-2);
+            snaillingsGrid[gridX, gridY - 1] = sID; // visited
             return true;
         }
-        else if (gridX - 1 >= 0 && slimeGrid[gridX - 1, gridY] == playerID)
+        else if (gridX - 1 >= 0 && slimeGrid[gridX - 1, gridY] == playerID && snaillingsGrid[gridX - 1, gridY] != sID)
         { // backwards
             snaillingsMove.Push(-1);
+            snaillingsGrid[gridX - 1, gridY] = sID; // visited
             return true;
         }
         else
@@ -102,16 +107,16 @@ public class SnaillingScript : MonoBehaviour {
             switch (m)
             {
                 case -1:
-                    snail.transform.position = new Vector3(snail.transform.position.x - .05f, snail.transform.position.y, 0);
+                    snail.transform.position = new Vector3(snail.transform.position.x - 1f, snail.transform.position.y, 0);
                     break;
                 case 1:
-                    snail.transform.position = new Vector3(snail.transform.position.x + .05f, snail.transform.position.y, 0);
+                    snail.transform.position = new Vector3(snail.transform.position.x + 1f, snail.transform.position.y, 0);
                     break;
                 case -2:
-                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y - .05f, 0);
+                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y - 1f, 0);
                     break;
                 case 2:
-                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y + .05f, 0);
+                    snail.transform.position = new Vector3(snail.transform.position.x, snail.transform.position.y + 1f, 0);
                     break;
             }
         }
