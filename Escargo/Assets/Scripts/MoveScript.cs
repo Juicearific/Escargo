@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 
 public class MoveScript : MonoBehaviour
 {
+
     /* Constants */
     public const int HEIGHT = 25;
     public const int WIDTH = 50;
@@ -12,61 +12,77 @@ public class MoveScript : MonoBehaviour
     /* Public Variables */
     public Object slimeSprite;
     public int[,] slimeGrid = new int[WIDTH, HEIGHT];
-    public Text slimeBox;
-    public string upKey = "w";
-    public string downKey = "s";
-    public string leftKey = "a";
-    public string rightKey = "d";
-    public string slimeKey = "e";
 
     /* Private Variables */
-    private bool placeSlime = true;
+    private bool placeSlime = false;
+    private KeyCode upKey;
+    private KeyCode rightKey;
+    private KeyCode leftKey;
+    private KeyCode downKey;
+    private KeyCode slimeKey;
+    private KeyCode mapKey;
+
+    private void Start()
+    {
+        int id = GetComponent<PlayerScript>().playerID;
+        upKey = OptionsStatic.controls[id, 0];
+        leftKey = OptionsStatic.controls[id, 1];
+        rightKey = OptionsStatic.controls[id, 2];
+        downKey = OptionsStatic.controls[id, 3];
+        slimeKey = OptionsStatic.controls[id, 4];
+        mapKey = OptionsStatic.controls[id, 5];
+    }
 
     void Update()
     {
         /* Slime Trigger */
-        if (Input.GetKeyUp(slimeKey))
+        if (Input.GetKeyUp(slimeKey.ToString()))
         {
+            Debug.Log("Sliming");
             placeSlime = !placeSlime;
         }
     }
 
     void FixedUpdate()
     {
+
         /* movement */
-        if (Input.GetKey(rightKey))
+        if (Input.GetKey(rightKey.ToString()))
         {
+            Debug.Log("Moving right");
             moveChar(Vector2.right);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x + moveSpeed, this.gameObject.transform.position.y));
         }
-        else if (Input.GetKey(downKey))
+        else if (Input.GetKey(downKey.ToString()))
         {
+            Debug.Log("Moving down");
             moveChar(Vector2.down);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y - moveSpeed));
         }
-        else if (Input.GetKey(leftKey))
+        else if (Input.GetKey(leftKey.ToString()))
         {
+            Debug.Log("Moving Left");
             moveChar(Vector2.left);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x - moveSpeed, this.gameObject.transform.position.y));
         }
-        else if (Input.GetKey(upKey))
+        else if (Input.GetKey(upKey.ToString()))
         {
-
+            Debug.Log("Moving Up");
             moveChar(Vector2.up);
             //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y + moveSpeed));
         }
         else {
             moveChar(Vector2.zero);
         }
+
+        
     }
 
     void moveChar(Vector2 targetVelocity)
     {
         if (placeSlime)
             setSlime();
-        slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";
-        float mSpeed = GetComponent<PlayerScript>().moveSpeed;
-        GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
+        GetComponent<Rigidbody2D>().velocity = targetVelocity * gameObject.GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
 
@@ -82,7 +98,7 @@ public class MoveScript : MonoBehaviour
             {
                 GetComponent<PlayerScript>().slime = slimeAmt;
                 Object.Instantiate(slimeSprite, new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
-                //GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
+                GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
             }
         }
     }

@@ -19,4 +19,9 @@ public class MainMenuController : MonoBehaviour {
     {
         SceneManager.LoadScene("Demo");
     }
+
+    public void OpenOptions()
+    {
+        SceneManager.LoadScene("OptMenu");
+    }
 }
