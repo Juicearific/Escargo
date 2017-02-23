@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class MoveScript : MonoBehaviour
 {
-
     /* Constants */
     public const int HEIGHT = 25;
     public const int WIDTH = 50;
@@ -12,6 +12,7 @@ public class MoveScript : MonoBehaviour
     /* Public Variables */
     public Object slimeSprite;
     public int[,] slimeGrid = new int[WIDTH, HEIGHT];
+    public Text slimeBox;
 
     /* Private Variables */
     private bool placeSlime = false;
@@ -32,7 +33,6 @@ public class MoveScript : MonoBehaviour
 
     void FixedUpdate()
     {
-
         /* movement */
         if (Input.GetKey(rightKey))
         {
@@ -58,15 +58,15 @@ public class MoveScript : MonoBehaviour
         else {
             moveChar(Vector2.zero);
         }
-
-        
     }
 
     void moveChar(Vector2 targetVelocity)
     {
         if (placeSlime)
             setSlime();
-        GetComponent<Rigidbody2D>().velocity = targetVelocity * gameObject.GetComponent<PlayerScript>().moveSpeed;
+        //slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";
+        float mSpeed = GetComponent<PlayerScript>().moveSpeed;
+        GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
 
@@ -82,7 +82,7 @@ public class MoveScript : MonoBehaviour
             {
                 GetComponent<PlayerScript>().slime = slimeAmt;
                 Object.Instantiate(slimeSprite, new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
-                GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
+                //GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
             }
         }
     }

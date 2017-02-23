@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SplitscreenScript : MonoBehaviour {
-    static int numCameras = 1;
+    public static int numCameras = 2;
     public Camera cam1;
     public Camera cam2;
     public Camera cam3;

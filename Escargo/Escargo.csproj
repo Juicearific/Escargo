@@ -77,13 +77,16 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CarrotScript.cs" />
     <Compile Include="Assets\Scripts\CopperScript.cs" />
+    <Compile Include="Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\MoveScript.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PowerUpEffectScript.cs" />
     <Compile Include="Assets\Scripts\PowerUpScript.cs" />
     <Compile Include="Assets\Scripts\SaltScript.cs" />
+    <Compile Include="Assets\Scripts\SnaillingScript.cs" />
     <Compile Include="Assets\Scripts\SplitscreenScript.cs" />
     <Compile Include="Assets\Scripts\WaterScript.cs" />
+    <Compile Include="Assets\Scripts\WinScript.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SortingLayerExposed.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\SpriteDepthInMap.cs" />
