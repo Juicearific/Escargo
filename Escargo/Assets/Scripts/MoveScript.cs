@@ -13,14 +13,14 @@ public class MoveScript : MonoBehaviour
     public Object slimeSprite;
     public int[,] slimeGrid = new int[WIDTH, HEIGHT];
     public Text slimeBox;
+    public string upKey = "w";
+    public string downKey = "s";
+    public string leftKey = "a";
+    public string rightKey = "d";
+    public string slimeKey = "e";
 
     /* Private Variables */
-    private bool placeSlime = false;
-    private string upKey = "w";
-    private string downKey = "s";
-    private string leftKey = "a";
-    private string rightKey = "d";
-    private string slimeKey = "e";
+    private bool placeSlime = true;
 
     void Update()
     {
@@ -64,7 +64,7 @@ public class MoveScript : MonoBehaviour
     {
         if (placeSlime)
             setSlime();
-        //slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";
+        slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";
         float mSpeed = GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
