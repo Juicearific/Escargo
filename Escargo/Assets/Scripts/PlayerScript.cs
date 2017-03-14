@@ -13,6 +13,7 @@ public class PlayerScript : MonoBehaviour {
     private int baseCullingMask;
     private Vector3 minimapPosition = new Vector3(24.5f,12.5f,-5.0f);
     private Camera c;
+	private float storedSpeed;
     /* Public Variables */
     public int slime = SLIME_MAX; //Slime remaining in slime bar. Initialized to be SLIME_MAX.
     public float moveSpeed = 2f; //Movement speed of snail.
@@ -27,6 +28,7 @@ public class PlayerScript : MonoBehaviour {
         // slider.maxValue = SLIME_MAX;
         c = gameObject.GetComponentInChildren<Camera>();
         baseCullingMask = c.cullingMask;
+		storedSpeed = moveSpeed;
     }
 
     void Update()
@@ -36,11 +38,14 @@ public class PlayerScript : MonoBehaviour {
             minimapActive = !minimapActive;
             if (!minimapActive)
             {
+				moveSpeed = storedSpeed;
                 c.transform.localPosition = new Vector3(0, 0, -1);
                 c.cullingMask = baseCullingMask;
             }
             else
             {
+				storedSpeed = moveSpeed;
+				moveSpeed = 0f;
                 c.cullingMask = (1 << LayerMask.NameToLayer("Background")) | (1 << LayerMask.NameToLayer("Minimap"));
             }
         }
