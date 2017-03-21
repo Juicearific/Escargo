@@ -74,8 +74,16 @@ public class MoveScript : MonoBehaviour
     {
         int gridX = (int)GetComponent<Transform>().position.x;
         int gridY = (int)GetComponent<Transform>().position.y;
-        if (slimeGrid[gridX,gridY] == 0) // will need to be changed once we have multiple players
+        int snails = GetComponent<SnaillingScript>().currentSnail;
+        GameObject[] snaillings = GetComponent<SnaillingScript>().snaillings;
+
+        if (slimeGrid[gridX, gridY] == 0)
         {
+            GetComponent<SnaillingScript>().findPath(snaillings[0], 0, gridX, gridY);
+            for (int i = 1; i < snails; i++)
+            {
+                GetComponent<SnaillingScript>().findPath(snaillings[i], i, (int)snaillings[i-1].transform.position.x, (int)snaillings[i - 1].transform.position.y);
+            }
             slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
             if (slimeAmt >= 0)
