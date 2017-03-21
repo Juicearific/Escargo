@@ -37,23 +37,19 @@ public class MoveScript : MonoBehaviour
         if (Input.GetKey(rightKey))
         {
             moveChar(Vector2.right);
-            //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x + moveSpeed, this.gameObject.transform.position.y));
         }
         else if (Input.GetKey(downKey))
         {
             moveChar(Vector2.down);
-            //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y - moveSpeed));
         }
         else if (Input.GetKey(leftKey))
         {
             moveChar(Vector2.left);
-            //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x - moveSpeed, this.gameObject.transform.position.y));
         }
         else if (Input.GetKey(upKey))
         {
 
             moveChar(Vector2.up);
-            //GetComponent<Rigidbody2D>().MovePosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y + moveSpeed));
         }
         else {
             moveChar(Vector2.zero);
@@ -85,5 +81,26 @@ public class MoveScript : MonoBehaviour
                 //GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
             }
         }
-    }
+	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+		//Shelling - Display Animation for Shell Collision here.
+		float pushback_force = 0.5f;
+		if (collision.gameObject.tag == "Player") {
+			Vector2 direction = collision.contacts[0].point - new Vector2(transform.position.x, transform.position.y);
+			direction = -direction.normalized;
+			float savedSpeed = gameObject.GetComponent<PlayerScript> ().moveSpeed;
+			gameObject.GetComponent<PlayerScript> ().moveSpeed = 0;
+			gameObject.GetComponent<Rigidbody2D>().AddForce(direction * pushback_force);
+			StartCoroutine(pushBackStun(savedSpeed)); //Stun after push back
+		}
+	}
+
+	IEnumerator pushBackStun(float storedSpeed)
+	{
+		yield return new WaitForSeconds(1);
+		gameObject.GetComponent<PlayerScript> ().moveSpeed = storedSpeed;
+		//Remove Animation for Shell Collision here.
+	}
 }
+	
