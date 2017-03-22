@@ -30,4 +30,9 @@ public class WaterScript : PowerUpEffectScript
         }
         yield return null;
     }
+
+    public override Texture getImage()
+    {
+        return Resources.Load<Texture>("Art/Pickups/water_small");
+    }
 }
