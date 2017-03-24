@@ -14,4 +14,9 @@ public class CarrotScript : PowerUpEffectScript {
     {
         gameObject.GetComponent<PlayerScript>().moveSpeed -= 2f;
     }
+
+    public override Texture getImage()
+    {
+        return Resources.Load<Texture>("Art/Pickups/carrot_small");
+    }
 }
