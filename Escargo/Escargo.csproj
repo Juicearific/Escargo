@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\BasicMap.cs" />
     <Compile Include="Assets\Scripts\CarrotScript.cs" />
     <Compile Include="Assets\Scripts\CopperScript.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />

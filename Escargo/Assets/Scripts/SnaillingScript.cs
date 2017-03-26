@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class Node
@@ -36,18 +37,26 @@ public class SnaillingScript : MonoBehaviour {
 
     /* Constants */
     public const int NUM_SNAILLINGS = 5;
+    public const int HEIGHT = 25;
+    public const int WIDTH = 50;
 
     /* Public Variables */
+    public int[,] slimeGrid = new int[WIDTH, HEIGHT];
+    public bool isPathfinding = false;
+    public bool isSnailfinding = false;
+    public Stack<KeyValuePair<int, int>> closestNode = new Stack<KeyValuePair<int, int>>();
     public Object snaillingsSprite;
     public GameObject[] snaillings = new GameObject[NUM_SNAILLINGS];
     public int currentSnail = 0;
     public Stack<Vector3>[] snaillingsMove = new Stack<Vector3>[NUM_SNAILLINGS];
+    public bool[] sMoveLocks = new bool[NUM_SNAILLINGS];
 
     /* Private Variables */
     private float spawnTimer = 0.0f;
     private float moveTimer = 0.0f;
     private float snailStartX;
     private float snailStartY;
+    public int playerID = 1;
 
     void Start()
     {
@@ -57,7 +66,6 @@ public class SnaillingScript : MonoBehaviour {
         {
             snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -1), Quaternion.identity);
             snaillings[i].GetComponent<BoxCollider2D>().enabled = false;
-            snaillings[i].GetComponent<BoxCollider2D>().enabled = true;
             snaillingsMove[i] = new Stack<Vector3>();
         }
     }
@@ -71,8 +79,8 @@ public class SnaillingScript : MonoBehaviour {
             snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
                 snaillings[currentSnail].transform.position.y, 0);
             snaillings[currentSnail].GetComponent<BoxCollider2D>().enabled = true;
-            snaillings[currentSnail].tag = "P" + GetComponent<PlayerScript>().playerID.ToString() + "Snailling";
-            findPath(snaillings[currentSnail], currentSnail, (int)GetComponent<Transform>().position.x, (int)GetComponent<Transform>().position.y);
+            snaillings[currentSnail].tag = "P" + playerID.ToString() + "Snailling";
+            //findPath(currentSnail, (int)GetComponent<Transform>().position.x, (int)GetComponent<Transform>().position.y);
             currentSnail++;
         }
         /* snailings move */
@@ -82,29 +90,44 @@ public class SnaillingScript : MonoBehaviour {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
+                snaillingsMove[i].Clear();
+                KeyValuePair<int, int> n = closestNode.Peek();
+                int oX = (int)snaillings[i].transform.position.x;
+                int oY = (int)snaillings[i].transform.position.y;
+                Thread snailPathThread = new Thread(() => findPath(i, oX, oY, n.Key, n.Value));
+                snailPathThread.Start();
+
+                Debug.Log(snaillingsMove[i].Count);
                 if (snaillings[i] != null && snaillingsMove[i].Count > 0)
                 {
-                    snaillings[i].transform.position = snaillingsMove[i].Pop();
+                    Debug.Log("moving...");
+                    Vector3 origPos = snaillings[i].transform.position;
+                    Vector3 newPos = snaillingsMove[i].Pop();
+                    float speed = 15f;
+                    float smooth = 1.0f - Mathf.Pow(0.5f, Time.deltaTime * speed);
+                    snaillings[i].transform.position = Vector3.Slerp(origPos, newPos, smooth);
                 }
             }
         }
     }
 
-    public void findPath(GameObject snail, int sID, int distX, int distY)
+    public void pathfind()
     {
-        snaillingsMove[sID].Clear();
-        int gridX = (int)snail.GetComponent<Transform>().position.x;
-        int gridY = (int)snail.GetComponent<Transform>().position.y;
-        int playerID = GetComponent<PlayerScript>().playerID;
-        int[,] slimeGrid = GetComponent<MoveScript>().slimeGrid;
-
+        isPathfinding = true;
+        
+        isPathfinding = false;
+    }
+    
+    public void findPath(int sID, int origX, int origY, int distX, int distY)
+    {
+        isSnailfinding = true;
         //initialize the open list, initialize the closed list
         List<Node> open = new List<Node>();
         List<Node> closed = new List<Node>();
         Node dist = new Node();
 
         //put the starting node on the open list(its g = 0, parent = null)
-        open.Add(new Node(gridX, gridY, -1, -1, -1, distX, distY));
+        open.Add(new Node(origX, origY, -1, -1, -1, distX, distY));
 
         bool foundGoal = false;
         while (open.Count != 0 && !foundGoal) {
@@ -123,7 +146,7 @@ public class SnaillingScript : MonoBehaviour {
 
             //generate q's (max four) successors and set their parents to q
             List<Node> succ =  new List<Node>();
-            if (q.x + 1 < MoveScript.WIDTH && slimeGrid[q.x + 1,q.y] == playerID)
+            if (q.x + 1 < WIDTH && slimeGrid[q.x + 1,q.y] == playerID)
             { // check for node below
                 succ.Add(new Node(q.x + 1, q.y, q.x, q.y, q.g, distX, distY));
             }
@@ -131,7 +154,7 @@ public class SnaillingScript : MonoBehaviour {
             { // check for node above
                 succ.Add(new Node(q.x - 1, q.y, q.x, q.y, q.g, distX, distY));
             }
-            if (q.y + 1 < MoveScript.HEIGHT && slimeGrid[q.x,q.y + 1] == playerID)
+            if (q.y + 1 < HEIGHT && slimeGrid[q.x,q.y + 1] == playerID)
             { // check for node right
                 succ.Add(new Node(q.x, q.y + 1, q.x, q.y, q.g, distX, distY));
             }
@@ -142,7 +165,6 @@ public class SnaillingScript : MonoBehaviour {
 
             foreach (Node n in succ)
             {
-                Debug.Log(n.x + " " + n.y);
                 if (n.x == distX && n.y == distY)
                 {
                     dist.x = n.x;
@@ -165,9 +187,8 @@ public class SnaillingScript : MonoBehaviour {
         
         if (dist.x != -1)
         {
-		    while (dist.p_x != -1 || dist.p_y != -1) {
-                //Debug.Log(dist.x + " " + dist.y);
-                Debug.Log("adding path");
+            //sMoveLocks[sID] = true;
+            while (dist.p_x != -1 || dist.p_y != -1) {
                 snaillingsMove[sID].Push(new Vector3(dist.x + .5f, dist.y + .5f, 0));
 			    dist.x = dist.p_x;
                 dist.y = dist.p_y;
@@ -178,7 +199,10 @@ public class SnaillingScript : MonoBehaviour {
 				    }
 			    }
 		    }
+            Debug.Log(snaillingsMove[sID].Count);
+            //sMoveLocks[sID] = false;
         }
+        isSnailfinding = false;
     }
 
     bool searchList(List<Node> l, Node n)
