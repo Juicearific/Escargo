@@ -9,6 +9,7 @@ public class MoveScript : MonoBehaviour
     /* Constants */
 
     /* Public Variables */
+    public GameObject[] otherPlayers;
     public Object slimeSprite;
     public Text slimeBox;
     public string upKey = "w";
@@ -78,16 +79,26 @@ public class MoveScript : MonoBehaviour
         if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0)
         {
             GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<SnaillingScript>().playerID;
+            KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
+
+            foreach (GameObject oP in otherPlayers)
+            {
+                if (oP.GetComponent<SnaillingScript>().closestNode.Contains(n))
+                {
+                    oP.GetComponent<SnaillingScript>().closestNode.Remove(n);
+                }
+            }
+
             if (GetComponent<SnaillingScript>().closestNode.Count > 0)
             {
-                KeyValuePair<int, int> n = GetComponent<SnaillingScript>().closestNode.Peek();
-                if (BasicMap.hVals[gridY][gridX] < BasicMap.hVals[n.Value][n.Key])
+                KeyValuePair<int, int> closeN = GetComponent<SnaillingScript>().closestNode[0];
+                if (BasicMap.hVals[gridY][gridX] < BasicMap.hVals[closeN.Value][closeN.Key])
                 {
-                    GetComponent<SnaillingScript>().closestNode.Push(new KeyValuePair<int, int>(gridX, gridY));
+                    GetComponent<SnaillingScript>().closestNode.Insert(0, n);
                 }
             } else
             {
-                GetComponent<SnaillingScript>().closestNode.Push(new KeyValuePair<int, int>(gridX, gridY));
+                GetComponent<SnaillingScript>().closestNode.Insert(0, n);
             }
             /*
             if (!GetComponent<SnaillingScript>().isPathfinding)

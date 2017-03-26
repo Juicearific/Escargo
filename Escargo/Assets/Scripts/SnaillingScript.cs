@@ -44,7 +44,7 @@ public class SnaillingScript : MonoBehaviour {
     public int[,] slimeGrid = new int[WIDTH, HEIGHT];
     public bool isPathfinding = false;
     public bool isSnailfinding = false;
-    public Stack<KeyValuePair<int, int>> closestNode = new Stack<KeyValuePair<int, int>>();
+    public List<KeyValuePair<int, int>> closestNode = new List<KeyValuePair<int, int>>();
     public Object snaillingsSprite;
     public GameObject[] snaillings = new GameObject[NUM_SNAILLINGS];
     public int currentSnail = 0;
@@ -73,7 +73,7 @@ public class SnaillingScript : MonoBehaviour {
     void FixedUpdate () {
         /* snaillings spawn */
         spawnTimer += Time.deltaTime;
-        if (spawnTimer >= 5f && currentSnail < NUM_SNAILLINGS)
+        if (spawnTimer >= 10f && currentSnail < NUM_SNAILLINGS)
         {
             spawnTimer = 0f;
             snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
@@ -91,7 +91,7 @@ public class SnaillingScript : MonoBehaviour {
             for (int i = 0; i < currentSnail; i++)
             {
                 snaillingsMove[i].Clear();
-                KeyValuePair<int, int> n = closestNode.Peek();
+                KeyValuePair<int, int> n = closestNode[0];
                 int oX = (int)snaillings[i].transform.position.x;
                 int oY = (int)snaillings[i].transform.position.y;
                 Thread snailPathThread = new Thread(() => findPath(i, oX, oY, n.Key, n.Value));
