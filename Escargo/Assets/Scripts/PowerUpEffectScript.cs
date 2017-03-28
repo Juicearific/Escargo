@@ -7,25 +7,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class PowerUpEffectScript : MonoBehaviour {
 
-    public int powerUpDur = 5; //5 Seconds
+    public float powerUpDur = 5.0f; //5 Seconds
+    private float secondsLeft;
     public Coroutine currentCoroutine;
-    
-	void Start () {
+    public GameObject generatedDisplay;
+
+	void Start ()
+    {
         addEffect();
+        secondsLeft = powerUpDur;
+        generateDisplay();
         currentCoroutine = StartCoroutine(powerUpTimer(powerUpDur));
 	}
 
-    IEnumerator powerUpTimer(int timer)
+    void Update()
+    {
+        powerUpDur -= Time.deltaTime;
+        if (powerUpDur < secondsLeft) //Re-display every 1 second.
+        {
+            generatedDisplay.GetComponentInChildren<Text>().text = ((int)powerUpDur).ToString() + "s";
+            secondsLeft -= 1.0f;
+        }
+        
+    }
+
+    IEnumerator powerUpTimer(float timer)
     {
         yield return new WaitForSeconds(timer);
         removeEffect();
+        Destroy(generatedDisplay);
         Destroy(this);
+    }
+
+    private void generateDisplay()
+    {
+        generatedDisplay = Instantiate(Resources.Load<GameObject>("PowerUpTimer"));//Get Prefab from Resources folder
+        Vector3 scale = generatedDisplay.transform.localScale;
+        generatedDisplay.transform.SetParent(gameObject.transform.GetComponentInChildren<HorizontalLayoutGroup>().gameObject.transform);
+        generatedDisplay.transform.localScale = scale;
+        generatedDisplay.GetComponentInChildren<RawImage>().texture = getImage();
+        generatedDisplay.GetComponentInChildren<Text>().text = powerUpDur.ToString() + "s";
     }
 
     public abstract void addEffect();
     public abstract void removeEffect();
-
+    public abstract Texture getImage();
 }

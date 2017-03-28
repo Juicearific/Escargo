@@ -30,4 +30,9 @@ public class SaltScript : PowerUpEffectScript
         }
         yield return null; 
     }
+
+    public override Texture getImage()
+    {
+        return Resources.Load<Texture>("Art/Pickups/Salt_small");
+    }
 }
