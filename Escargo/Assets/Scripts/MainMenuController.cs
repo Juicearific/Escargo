@@ -19,9 +19,4 @@ public class MainMenuController : MonoBehaviour {
     {
         SceneManager.LoadScene("Demo");
     }
-
-    public void HowTo()
-    {
-        SceneManager.LoadScene("Controls");
-    }
 }

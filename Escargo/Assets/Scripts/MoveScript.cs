@@ -24,23 +24,9 @@ public class MoveScript : MonoBehaviour
     public string leftKey = "a";
     public string rightKey = "d";
     public string slimeKey = "e";
-    public string mapKey = "q"; // Doesn't do anything right now?
 
     /* Private Variables */
     private bool placeSlime = true;
-
-    void Start() // Update your controls here. 
-    {
-        if (OptionsStaticScript.started) // If you skipped the main menu somehow, these won't be initialized. Ergo, stay with the defaults above.  
-        {
-            upKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 0].ToString();
-            downKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 1].ToString();
-            leftKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 2].ToString();
-            rightKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 3].ToString();
-            slimeKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 4].ToString();
-            upKey = OptionsStaticScript.controls[GetComponent<SnaillingScript>().playerID, 5].ToString();
-        }
-    }
 
     void Update()
     {
