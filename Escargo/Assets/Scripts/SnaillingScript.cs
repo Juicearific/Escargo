@@ -65,7 +65,6 @@ public class SnaillingScript : MonoBehaviour {
         for (int i = 0; i < NUM_SNAILLINGS; i++)
         {
             snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -1), Quaternion.identity);
-            snaillings[i].GetComponent<BoxCollider2D>().enabled = false;
             snaillingsMove[i] = new Stack<Vector3>();
         }
     }
@@ -78,7 +77,6 @@ public class SnaillingScript : MonoBehaviour {
             spawnTimer = 0f;
             snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
                 snaillings[currentSnail].transform.position.y, 0);
-            snaillings[currentSnail].GetComponent<BoxCollider2D>().enabled = true;
             snaillings[currentSnail].tag = "P" + playerID.ToString() + "Snailling";
             //findPath(currentSnail, (int)GetComponent<Transform>().position.x, (int)GetComponent<Transform>().position.y);
             currentSnail++;
@@ -90,23 +88,22 @@ public class SnaillingScript : MonoBehaviour {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
-                snaillingsMove[i].Clear();
-                KeyValuePair<int, int> n = closestNode[0];
-                int oX = (int)snaillings[i].transform.position.x;
-                int oY = (int)snaillings[i].transform.position.y;
-                Thread snailPathThread = new Thread(() => findPath(i, oX, oY, n.Key, n.Value));
-                snailPathThread.Start();
+				if (snaillings [i] != null) {
+					snaillingsMove [i].Clear ();
+					KeyValuePair<int, int> n = closestNode [0];
+					int oX = (int)snaillings [i].transform.position.x;
+					int oY = (int)snaillings [i].transform.position.y;
+					Thread snailPathThread = new Thread (() => findPath (i, oX, oY, n.Key, n.Value));
+					snailPathThread.Start ();
 
-                Debug.Log(snaillingsMove[i].Count);
-                if (snaillings[i] != null && snaillingsMove[i].Count > 0)
-                {
-                    Debug.Log("moving...");
-                    Vector3 origPos = snaillings[i].transform.position;
-                    Vector3 newPos = snaillingsMove[i].Pop();
-                    float speed = 15f;
-                    float smooth = 1.0f - Mathf.Pow(0.5f, Time.deltaTime * speed);
-                    snaillings[i].transform.position = Vector3.Slerp(origPos, newPos, smooth);
-                }
+					if (snaillings [i] != null && snaillingsMove [i].Count > 0) {
+						Vector3 origPos = snaillings [i].transform.position;
+						Vector3 newPos = snaillingsMove [i].Pop ();
+						float speed = 15f;
+						float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
+						snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
+					}
+				}
             }
         }
     }
@@ -199,7 +196,6 @@ public class SnaillingScript : MonoBehaviour {
 				    }
 			    }
 		    }
-            Debug.Log(snaillingsMove[sID].Count);
             //sMoveLocks[sID] = false;
         }
         isSnailfinding = false;
