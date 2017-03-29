@@ -5,35 +5,33 @@ using UnityEngine.SceneManagement;
 
 public class WinScript : MonoBehaviour
 {
-    /* Constants */
-    const int NUM_SNAILINGS_TO_WIN = 5;
+	void OnTriggerEnter2D(Collider2D collider) {
+		if (collider.gameObject.tag.Contains("Snailling"))
+		{
+			int playerID = getPlayerIDFromTag(collider.gameObject.tag);
+			if (playerID != -1) // -1 implies playerID wasn't found in tag.
+			{
+				GameObject snaillingsPlayer = findPlayer(playerID);
+				if (snaillingsPlayer != null)
+				{
+					/* Change GUI to reflect that a snailling made it */
+					snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved++; //Increment number of snailings saved for player
+					snaillingsPlayer.GetComponent<PlayerScript>().snaillingLabel.text = "Snaillings " 
+						+ snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved.ToString() 
+						+ "/" + SnaillingScript.NUM_SNAILLINGS.ToString();
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag.Contains("Snailling"))
-        {
-            int playerID = getPlayerIDFromTag(collision.gameObject.tag);
-            if (playerID != -1) // -1 implies playerID wasn't found in tag.
-            {
-                GameObject snaillingsPlayer = findPlayer(playerID);
-                if (snaillingsPlayer != null)
-                {
-                    /* Change GUI to reflect that a snailling made it */
-                    snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved++; //Increment number of snailings saved for player
-                    snaillingsPlayer.GetComponent<PlayerScript>().snaillingLabel.text = "Snaillings " + snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved.ToString() + "/5";
-                    
-                    /* Destroy the snailling */
-                    destroySnailling(collision.gameObject, snaillingsPlayer.GetComponent<SnaillingScript>().snaillings);
-                    
-                    /* Check win condition */
-                    if (snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved >= 5)
-                    {
-                        SceneManager.LoadScene("MainMenu");
-                    }
-                }
-            }
-        }
-    }
+					/* Destroy the snailling */
+					destroySnailling(collider.gameObject, snaillingsPlayer.GetComponent<SnaillingScript>().snaillings);
+
+					/* Check win condition */
+					if (snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved >= SnaillingScript.NUM_SNAILLINGS)
+					{
+						SceneManager.LoadScene("MainMenu");
+					}
+				}
+			}
+		}
+	}
 
     void destroySnailling(GameObject snailling, GameObject[] snaillings)
     {
