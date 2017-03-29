@@ -83,7 +83,7 @@ public class SnaillingScript : MonoBehaviour {
         }
         /* snailings move */
         moveTimer += Time.deltaTime;
-        if (moveTimer >= 2f)
+        if (moveTimer >= 0.5f)
         {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
