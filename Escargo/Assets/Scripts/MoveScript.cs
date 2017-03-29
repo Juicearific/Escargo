@@ -2,16 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Threading;
 
 public class MoveScript : MonoBehaviour
 {
     /* Constants */
-    public const int HEIGHT = 25;
-    public const int WIDTH = 50;
 
     /* Public Variables */
+    public GameObject[] otherPlayers;
     public Object slimeSprite;
-    public int[,] slimeGrid = new int[WIDTH, HEIGHT];
     public Text slimeBox;
     public string upKey = "w";
     public string downKey = "s";
@@ -70,9 +69,46 @@ public class MoveScript : MonoBehaviour
     {
         int gridX = (int)GetComponent<Transform>().position.x;
         int gridY = (int)GetComponent<Transform>().position.y;
-        if (slimeGrid[gridX,gridY] == 0) // will need to be changed once we have multiple players
+        int snails = GetComponent<SnaillingScript>().currentSnail;
+        GameObject[] snaillings = GetComponent<SnaillingScript>().snaillings;
+
+        if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0)
         {
-            slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
+            GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<SnaillingScript>().playerID;
+            KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
+
+            foreach (GameObject oP in otherPlayers)
+            {
+                if (oP.GetComponent<SnaillingScript>().closestNode.Contains(n))
+                {
+                    oP.GetComponent<SnaillingScript>().closestNode.Remove(n);
+                }
+            }
+
+            if (GetComponent<SnaillingScript>().closestNode.Count > 0)
+            {
+                KeyValuePair<int, int> closeN = GetComponent<SnaillingScript>().closestNode[0];
+                if (BasicMap.hVals[gridY][gridX] < BasicMap.hVals[closeN.Value][closeN.Key])
+                {
+                    GetComponent<SnaillingScript>().closestNode.Insert(0, n);
+                }
+            } else
+            {
+                GetComponent<SnaillingScript>().closestNode.Insert(0, n);
+            }
+            /*
+            if (!GetComponent<SnaillingScript>().isPathfinding)
+            {
+                KeyValuePair<int, int> n = GetComponent<SnaillingScript>().closestNode.Peek();
+                for (int i = 0; i < snails; i++)
+                {
+                    Thread snailPathThread = new Thread(() => GetComponent<SnaillingScript>().findPath(i,
+                        (int)snaillings[i].transform.position.x, (int)snaillings[i].transform.position.y, n.Key, n.Value));
+                    snailPathThread.Start();
+                }
+            }
+            */
+
             int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
             if (slimeAmt >= 0)
             {
