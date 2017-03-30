@@ -54,12 +54,6 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
     }
 
     public abstract void addEffect();
-    public virtual void removeEffect()
-    {
-        if (generatedDisplay != null)
-        {
-            Destroy(generatedDisplay);
-        }
-    }
+    public abstract void removeEffect();
     public abstract Texture getImage();
 }

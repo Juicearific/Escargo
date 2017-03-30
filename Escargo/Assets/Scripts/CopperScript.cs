@@ -16,7 +16,6 @@ public class CopperScript : PowerUpEffectScript
 
     public override void removeEffect()
     {
-        base.removeEffect();
         gameObject.GetComponent<PlayerScript>().moveSpeed += movementSpeed;
         //Added instead of set just incase a movement speed boost wore off while it is stunned.
     }
