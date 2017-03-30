@@ -119,10 +119,9 @@ public class MoveScript : MonoBehaviour
             int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
             if (slimeAmt >= 0)
             {
-                GetComponent<PlayerScript>().slime = slimeAmt;
+                GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
                 slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
                 updateSlime(gridX, gridY, 0);
-                GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
             }
         }
 	}

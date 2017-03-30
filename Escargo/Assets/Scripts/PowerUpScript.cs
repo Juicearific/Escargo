@@ -28,13 +28,13 @@ public class PowerUpScript : MonoBehaviour
             {
                 int slimeAmt = collider.gameObject.GetComponent<PlayerScript>().slime - 30;
                 if (slimeAmt < 0) { slimeAmt = 0; }
-                collider.gameObject.GetComponent<PlayerScript>().slime = slimeAmt;
+                collider.gameObject.GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
             }
             else if (powerUp == PowerUpType.Flower)
             {
                 int slimeAmt = collider.gameObject.GetComponent<PlayerScript>().slime + 30;
                 if (slimeAmt > PlayerScript.SLIME_MAX) { slimeAmt = PlayerScript.SLIME_MAX; }
-                collider.gameObject.GetComponent<PlayerScript>().slime = slimeAmt;
+                collider.gameObject.GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
             }
             else
             {

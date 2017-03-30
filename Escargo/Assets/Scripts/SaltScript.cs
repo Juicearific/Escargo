@@ -15,6 +15,7 @@ public class SaltScript : PowerUpEffectScript
 
     public override void removeEffect()
     {
+        base.removeEffect();
         //Do not need to remove it. It stops when it is finished.
     }
 
@@ -24,7 +25,7 @@ public class SaltScript : PowerUpEffectScript
         {
             int slimeAmt = GetComponent<PlayerScript>().slime - slimeTic;
             if (slimeAmt < 0) slimeAmt = 0;
-            GetComponent<PlayerScript>().slime = slimeAmt;
+            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
 
             yield return new WaitForSeconds(ticDuration);
         }

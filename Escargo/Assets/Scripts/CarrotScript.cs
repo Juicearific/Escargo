@@ -12,6 +12,7 @@ public class CarrotScript : PowerUpEffectScript {
 
     public override void removeEffect()
     {
+        base.removeEffect();
         gameObject.GetComponent<PlayerScript>().moveSpeed -= 2f;
     }
 
