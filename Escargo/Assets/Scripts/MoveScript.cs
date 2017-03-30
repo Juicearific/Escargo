@@ -18,7 +18,7 @@ public class MoveScript : MonoBehaviour
     // 4 - Tritrail
     // 5 - Quadtrail
     public GameObject[,] slimeObjGrid = new GameObject[SnaillingScript.WIDTH, SnaillingScript.HEIGHT];
-    public Text slimeBox;
+    /*public Text slimeBox;*/
     public string upKey = "w";
     public string downKey = "s";
     public string leftKey = "a";
@@ -66,7 +66,7 @@ public class MoveScript : MonoBehaviour
     {
         if (placeSlime)
             setSlime();
-        slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";
+        /*slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";*/
         float mSpeed = GetComponent<PlayerScript>().moveSpeed;
         GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
@@ -122,7 +122,7 @@ public class MoveScript : MonoBehaviour
                 GetComponent<PlayerScript>().slime = slimeAmt;
                 slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
                 updateSlime(gridX, gridY, 0);
-                //GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
+                GetComponent<PlayerScript>().slider.value = GetComponent<PlayerScript>().slime;
             }
         }
 	}

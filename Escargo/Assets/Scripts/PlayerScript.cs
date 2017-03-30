@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour {
     /* Public Variables */
     public int slime = SLIME_MAX; //Slime remaining in slime bar. Initialized to be SLIME_MAX.
     public float moveSpeed = 2f; //Movement speed of snail.
-    //public Slider slider;
+    public Slider slider;
     public int numSnailingsSaved = 0;
     public Text snaillingLabel;
     public string minimapKey = "q";
