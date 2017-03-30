@@ -52,4 +52,10 @@ public class PlayerScript : MonoBehaviour {
         if (minimapActive)
             c.transform.position = minimapPosition;
     }
+
+    public void changeSlimeBar(int amt)
+    {
+        slime = amt;
+        slider.value = slime;
+    }
 }

@@ -25,7 +25,7 @@ public class WaterScript : PowerUpEffectScript
         {
             int slimeAmt = GetComponent<PlayerScript>().slime + slimeTic;
             if (slimeAmt > PlayerScript.SLIME_MAX) slimeAmt = PlayerScript.SLIME_MAX;
-            GetComponent<PlayerScript>().slime = slimeAmt;
+            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
 
             yield return new WaitForSeconds(ticDuration);
         }

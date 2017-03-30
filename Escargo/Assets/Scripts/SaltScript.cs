@@ -25,7 +25,7 @@ public class SaltScript : PowerUpEffectScript
         {
             int slimeAmt = GetComponent<PlayerScript>().slime - slimeTic;
             if (slimeAmt < 0) slimeAmt = 0;
-            GetComponent<PlayerScript>().slime = slimeAmt;
+            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
 
             yield return new WaitForSeconds(ticDuration);
         }
