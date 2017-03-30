@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour {
     /* Private Variables */
     private bool minimapActive = false;
     private int baseCullingMask;
-    private Vector3 minimapPosition = new Vector3(24.5f,12.5f,-5.0f);
+    private Vector3 minimapPosition = new Vector3(24.5f,12.5f,-6.0f);
     private Camera c;
 	private float storedSpeed;
     /* Public Variables */
