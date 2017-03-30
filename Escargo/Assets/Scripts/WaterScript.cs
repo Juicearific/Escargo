@@ -15,6 +15,7 @@ public class WaterScript : PowerUpEffectScript
 
     public override void removeEffect()
     {
+        base.removeEffect();
         //Do not need to remove it. It stops when it is finished.
     }
 
