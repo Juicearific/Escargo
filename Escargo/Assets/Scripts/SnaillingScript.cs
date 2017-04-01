@@ -54,6 +54,7 @@ public class SnaillingScript : MonoBehaviour {
     /* Private Variables */
     private float spawnTimer = 0.0f;
     private float moveTimer = 0.0f;
+    private float pathTimer = 0.0f;
     private float snailStartX;
     private float snailStartY;
     public int playerID = 1;
@@ -64,7 +65,7 @@ public class SnaillingScript : MonoBehaviour {
         snailStartY = GetComponent<Transform>().position.y;
         for (int i = 0; i < NUM_SNAILLINGS; i++)
         {
-            snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -1), Quaternion.identity);
+            snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -500), Quaternion.identity);
             snaillingsMove[i] = new Stack<Vector3>();
         }
     }
@@ -83,9 +84,27 @@ public class SnaillingScript : MonoBehaviour {
         }
         /* snailings move */
         moveTimer += Time.deltaTime;
-        if (moveTimer >= 0.5f)
+        if (moveTimer >= 1.0f)
         {
             moveTimer = 0f;
+            for (int i = 0; i < currentSnail; i++)
+            {
+                if (snaillings[i] != null && snaillingsMove[i].Count > 0)
+                {
+                    snaillings[i].transform.position = snaillingsMove[i].Pop();
+                    /*Vector3 origPos = snaillings [i].transform.position;
+                    Vector3 newPos = snaillingsMove [i].Pop ();
+                    float speed = 15f;
+                    float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
+                    snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
+                    */
+                }
+            }
+        }
+        pathTimer += Time.deltaTime;
+        if (pathTimer >= 1.5f)
+        {
+            pathTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
 				if (snaillings [i] != null) {
@@ -93,26 +112,12 @@ public class SnaillingScript : MonoBehaviour {
 					KeyValuePair<int, int> n = closestNode [0];
 					int oX = (int)snaillings [i].transform.position.x;
 					int oY = (int)snaillings [i].transform.position.y;
+                    Debug.Log("Pathing from " + oX + ","+oY+ " to " + n.Key + "," + n.Value);
 					Thread snailPathThread = new Thread (() => findPath (i, oX, oY, n.Key, n.Value));
 					snailPathThread.Start ();
-
-					if (snaillings [i] != null && snaillingsMove [i].Count > 0) {
-						Vector3 origPos = snaillings [i].transform.position;
-						Vector3 newPos = snaillingsMove [i].Pop ();
-						float speed = 15f;
-						float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
-						snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
-					}
 				}
             }
         }
-    }
-
-    public void pathfind()
-    {
-        isPathfinding = true;
-        
-        isPathfinding = false;
     }
     
     public void findPath(int sID, int origX, int origY, int distX, int distY)

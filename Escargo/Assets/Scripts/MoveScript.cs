@@ -79,7 +79,8 @@ public class MoveScript : MonoBehaviour
         int snails = GetComponent<SnaillingScript>().currentSnail;
         GameObject[] snaillings = GetComponent<SnaillingScript>().snaillings;
 
-        if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0)
+        int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
+        if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0 && slimeAmt >= 0)
         {
             GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<SnaillingScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
@@ -103,26 +104,10 @@ public class MoveScript : MonoBehaviour
             {
                 GetComponent<SnaillingScript>().closestNode.Insert(0, n);
             }
-            /*
-            if (!GetComponent<SnaillingScript>().isPathfinding)
-            {
-                KeyValuePair<int, int> n = GetComponent<SnaillingScript>().closestNode.Peek();
-                for (int i = 0; i < snails; i++)
-                {
-                    Thread snailPathThread = new Thread(() => GetComponent<SnaillingScript>().findPath(i,
-                        (int)snaillings[i].transform.position.x, (int)snaillings[i].transform.position.y, n.Key, n.Value));
-                    snailPathThread.Start();
-                }
-            }
-            */
-
-            int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
-            if (slimeAmt >= 0)
-            {
-                GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
-                slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
-                updateSlime(gridX, gridY, 0);
-            }
+            
+            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
+            slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
+            updateSlime(gridX, gridY, 0);
         }
 	}
 
