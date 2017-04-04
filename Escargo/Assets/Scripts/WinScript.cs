@@ -16,9 +16,7 @@ public class WinScript : MonoBehaviour
 				{
 					/* Change GUI to reflect that a snailling made it */
 					snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved++; //Increment number of snailings saved for player
-					snaillingsPlayer.GetComponent<PlayerScript>().snaillingLabel.text = "Snaillings " 
-						+ snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved.ToString() 
-						+ "/" + SnaillingScript.NUM_SNAILLINGS.ToString();
+					Camera.main.GetComponent<GlobalScript>().changeDisplay(playerID, snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved);
 
 					/* Destroy the snailling */
 					destroySnailling(collider.gameObject, snaillingsPlayer.GetComponent<SnaillingScript>().snaillings);
