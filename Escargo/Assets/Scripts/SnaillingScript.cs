@@ -57,10 +57,11 @@ public class SnaillingScript : MonoBehaviour {
     private float pathTimer = 0.0f;
     private float snailStartX;
     private float snailStartY;
-    public int playerID = 1;
+    private int playerID;
 
     void Start()
     {
+		playerID = GetComponent<PlayerScript> ().playerID;
         snailStartX = GetComponent<Transform>().position.x;
         snailStartY = GetComponent<Transform>().position.y;
         for (int i = 0; i < NUM_SNAILLINGS; i++)

@@ -52,7 +52,7 @@ public class WinScript : MonoBehaviour
         GameObject[] listOfPlayers = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < listOfPlayers.Length; i++)
         {
-            if (listOfPlayers[i].GetComponent<SnaillingScript>().playerID == playerID)
+            if (listOfPlayers[i].GetComponent<PlayerScript>().playerID == playerID)
             {
                 return listOfPlayers[i]; // Return the player.
             }

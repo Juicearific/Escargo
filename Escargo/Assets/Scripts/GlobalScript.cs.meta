@@ -1,10 +1,18 @@
 fileFormatVersion: 2
 guid: 2302e7305e33082489b9162b5767abf2
-timeCreated: 1491325966
+timeCreated: 1491340738
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - PierrePrefab: {fileID: 1663658733858528, guid: e5af5494903316441b896c60c37a4fc3,
+      type: 2}
+  - KentaPrefab: {fileID: 1273653474060458, guid: d7e05fef2950356438877c4bb68b95d2,
+      type: 2}
+  - LilJimPrefab: {fileID: 1667899993446626, guid: 88af0dfdc4ce3684c89b9a49ed101cdd,
+      type: 2}
+  - BigBerthaPrefab: {fileID: 1981298099042568, guid: a4f4a6bc7bb444e46a73e91e63ac7542,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
