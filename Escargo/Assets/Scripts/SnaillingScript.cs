@@ -43,14 +43,14 @@ public class SnaillingScript : MonoBehaviour {
     /* Public Variables */
     public static int[,] slimeGrid = new int[WIDTH, HEIGHT];
     public List<KeyValuePair<int, int>> closestNode = new List<KeyValuePair<int, int>>();
-    KeyValuePair<int, int> lastMove;
+    KeyValuePair<int, int>[] lastMove = new KeyValuePair<int, int>[NUM_SNAILLINGS];
     public Object snaillingsSprite;
     public GameObject[] snaillings = new GameObject[NUM_SNAILLINGS];
     public int currentSnail = 0;
     public Stack<Vector3>[] snaillingsMove = new Stack<Vector3>[NUM_SNAILLINGS];
 
     /* Private Variables */
-    private float spawnTimer = 0.0f;
+    private float spawnTimer = 5.0f;
     private float moveTimer = 0.0f;
     private float snailStartX;
     private float snailStartY;
@@ -67,6 +67,7 @@ public class SnaillingScript : MonoBehaviour {
         {
             snaillings[i] = (GameObject)Object.Instantiate(snaillingsSprite, new Vector3(snailStartX, snailStartY, -500), Quaternion.identity);
             snaillingsMove[i] = new Stack<Vector3>();
+            lastMove[i] = new KeyValuePair<int, int>(-10,-10);
         }
     }
 
@@ -83,22 +84,31 @@ public class SnaillingScript : MonoBehaviour {
         }
         /* snailings move */
         moveTimer += Time.deltaTime;
-        if (moveTimer >= 1f)
+        if (moveTimer >= 1.5f)
         {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
                 int oX = (int)snaillings[i].transform.position.x;
                 int oY = (int)snaillings[i].transform.position.y;
-                Debug.Log("just inside of for");
-                if (!findSimplePath(i, oX, oY) && (deadend <= 1 || deadend > 5) && !snailPathThread.IsAlive)
+                bool simple = findSimplePath(i, oX, oY);
+                Debug.Log("deadends: " + deadend);
+                if (snailPathThread != null)
+                {
+                    Debug.Log("currently astaring: " + snailPathThread.IsAlive);
+                }
+                Debug.Log("simple: " +simple);
+                if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive))
                 {
                     // no simple path found, run AI
                     snaillingsMove[i].Clear();
                     KeyValuePair<int, int> n = closestNode[0];
-                    Debug.Log("Pathing from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
-                    snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
-                    snailPathThread.Start();
+                    if (!(oX == n.Key && oY == n.Value))
+                    {
+                        Debug.Log("Pathing from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
+                        snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
+                        snailPathThread.Start();
+                    }
                 }
                 if (snaillingsMove[i].Count > 0)
                 {
@@ -126,7 +136,7 @@ public class SnaillingScript : MonoBehaviour {
         KeyValuePair<int, int> nextMove = new KeyValuePair<int, int>();
         if (gridX + 1 < WIDTH && slimeGrid[gridX + 1, gridY] == playerID)
         {
-            if (!(lastMove.Key == gridX + 1 && lastMove.Value == gridY))
+            if (!(lastMove[sID].Key == gridX + 1 && lastMove[sID].Value == gridY))
             {
                 nextMove = new KeyValuePair<int, int>(gridX + 1, gridY);
             }
@@ -134,7 +144,7 @@ public class SnaillingScript : MonoBehaviour {
         }
         if (gridY + 1 < HEIGHT && slimeGrid[gridX, gridY + 1] == playerID)
         {
-            if (!(lastMove.Key == gridX && lastMove.Value == gridY + 1))
+            if (!(lastMove[sID].Key == gridX && lastMove[sID].Value == gridY + 1))
             {
                 nextMove = new KeyValuePair<int, int>(gridX, gridY + 1);
             }
@@ -142,7 +152,7 @@ public class SnaillingScript : MonoBehaviour {
         }
         if (gridY - 1 >= 0 && slimeGrid[gridX, gridY - 1] == playerID)
         {
-            if (!(lastMove.Key == gridX && lastMove.Value == gridY - 1))
+            if (!(lastMove[sID].Key == gridX && lastMove[sID].Value == gridY - 1))
             {
                 nextMove = new KeyValuePair<int, int>(gridX, gridY - 1);
             }
@@ -150,18 +160,20 @@ public class SnaillingScript : MonoBehaviour {
         }
         if (gridX - 1 >= 0 && slimeGrid[gridX - 1, gridY] == playerID)
         {
-            if (!(lastMove.Key == gridX - 1 && lastMove.Value == gridY))
+            if (!(lastMove[sID].Key == gridX - 1 && lastMove[sID].Value == gridY))
             {
                 nextMove = new KeyValuePair<int, int>(gridX - 1, gridY);
             }
             dirs++;
         }
         Debug.Log(dirs);
+        Debug.Log("lastMove: " + lastMove[sID].Key + "," + lastMove[sID].Value);
         if (dirs == 2)
         {
             // only one path (aka only forward and backwards)
             snaillingsMove[sID].Push(new Vector3(nextMove.Key + .5f, nextMove.Value + .5f, 0));
-            lastMove = new KeyValuePair<int, int>(gridX, gridY);
+            lastMove[sID] = new KeyValuePair<int, int>(gridX, gridY);
+            deadend = 0;
             return true;
         } else if (dirs == 1)
         {
