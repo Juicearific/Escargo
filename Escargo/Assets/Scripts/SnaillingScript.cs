@@ -41,23 +41,22 @@ public class SnaillingScript : MonoBehaviour {
     public const int WIDTH = 50;
 
     /* Public Variables */
-    public int[,] slimeGrid = new int[WIDTH, HEIGHT];
-    public bool isPathfinding = false;
-    public bool isSnailfinding = false;
+    public static int[,] slimeGrid = new int[WIDTH, HEIGHT];
     public List<KeyValuePair<int, int>> closestNode = new List<KeyValuePair<int, int>>();
+    KeyValuePair<int, int> lastMove;
     public Object snaillingsSprite;
     public GameObject[] snaillings = new GameObject[NUM_SNAILLINGS];
     public int currentSnail = 0;
     public Stack<Vector3>[] snaillingsMove = new Stack<Vector3>[NUM_SNAILLINGS];
-    public bool[] sMoveLocks = new bool[NUM_SNAILLINGS];
 
     /* Private Variables */
     private float spawnTimer = 0.0f;
     private float moveTimer = 0.0f;
-    private float pathTimer = 0.0f;
     private float snailStartX;
     private float snailStartY;
     private int playerID;
+    private int deadend = 0;
+    Thread snailPathThread;
 
     void Start()
     {
@@ -80,20 +79,32 @@ public class SnaillingScript : MonoBehaviour {
             snaillings[currentSnail].transform.position = new Vector3(snaillings[currentSnail].transform.position.x,
                 snaillings[currentSnail].transform.position.y, 0);
             snaillings[currentSnail].tag = "P" + playerID.ToString() + "Snailling";
-            //findPath(currentSnail, (int)GetComponent<Transform>().position.x, (int)GetComponent<Transform>().position.y);
             currentSnail++;
         }
         /* snailings move */
         moveTimer += Time.deltaTime;
-        if (moveTimer >= 1.0f)
+        if (moveTimer >= 1f)
         {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
-                if (snaillings[i] != null && snaillingsMove[i].Count > 0)
+                int oX = (int)snaillings[i].transform.position.x;
+                int oY = (int)snaillings[i].transform.position.y;
+                Debug.Log("just inside of for");
+                if (!findSimplePath(i, oX, oY) && (deadend <= 1 || deadend > 5) && !snailPathThread.IsAlive)
                 {
-                    snaillings[i].transform.position = snaillingsMove[i].Pop();
-                    /*Vector3 origPos = snaillings [i].transform.position;
+                    // no simple path found, run AI
+                    snaillingsMove[i].Clear();
+                    KeyValuePair<int, int> n = closestNode[0];
+                    Debug.Log("Pathing from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
+                    snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
+                    snailPathThread.Start();
+                }
+                if (snaillingsMove[i].Count > 0)
+                {
+                    snaillings[i].transform.position = snaillingsMove[i].Pop(); // actually make move
+                    /*Lerp:
+                        * Vector3 origPos = snaillings [i].transform.position;
                     Vector3 newPos = snaillingsMove [i].Pop ();
                     float speed = 15f;
                     float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
@@ -102,32 +113,72 @@ public class SnaillingScript : MonoBehaviour {
                 }
             }
         }
-        pathTimer += Time.deltaTime;
-        if (pathTimer >= 1.5f)
-        {
-            pathTimer = 0f;
-            for (int i = 0; i < currentSnail; i++)
-            {
-				if (snaillings [i] != null) {
-					snaillingsMove [i].Clear ();
-					KeyValuePair<int, int> n = closestNode [0];
-					int oX = (int)snaillings [i].transform.position.x;
-					int oY = (int)snaillings [i].transform.position.y;
-                    Debug.Log("Pathing from " + oX + ","+oY+ " to " + n.Key + "," + n.Value);
-					Thread snailPathThread = new Thread (() => findPath (i, oX, oY, n.Key, n.Value));
-					snailPathThread.Start ();
-				}
-            }
-        }
     }
-    
-    public void findPath(int sID, int origX, int origY, int distX, int distY)
+
+    bool findSimplePath(int sID, int gridX, int gridY)
     {
-        isSnailfinding = true;
+        int playerID = GetComponent<PlayerScript>().playerID;
+        int dirs = 0;
+        if (gridX < 2)
+        {
+            dirs++; // so it looks like there's two directions from start
+        }
+        KeyValuePair<int, int> nextMove = new KeyValuePair<int, int>();
+        if (gridX + 1 < WIDTH && slimeGrid[gridX + 1, gridY] == playerID)
+        {
+            if (!(lastMove.Key == gridX + 1 && lastMove.Value == gridY))
+            {
+                nextMove = new KeyValuePair<int, int>(gridX + 1, gridY);
+            }
+            dirs++;
+        }
+        if (gridY + 1 < HEIGHT && slimeGrid[gridX, gridY + 1] == playerID)
+        {
+            if (!(lastMove.Key == gridX && lastMove.Value == gridY + 1))
+            {
+                nextMove = new KeyValuePair<int, int>(gridX, gridY + 1);
+            }
+            dirs++;
+        }
+        if (gridY - 1 >= 0 && slimeGrid[gridX, gridY - 1] == playerID)
+        {
+            if (!(lastMove.Key == gridX && lastMove.Value == gridY - 1))
+            {
+                nextMove = new KeyValuePair<int, int>(gridX, gridY - 1);
+            }
+            dirs++;
+        }
+        if (gridX - 1 >= 0 && slimeGrid[gridX - 1, gridY] == playerID)
+        {
+            if (!(lastMove.Key == gridX - 1 && lastMove.Value == gridY))
+            {
+                nextMove = new KeyValuePair<int, int>(gridX - 1, gridY);
+            }
+            dirs++;
+        }
+        Debug.Log(dirs);
+        if (dirs == 2)
+        {
+            // only one path (aka only forward and backwards)
+            snaillingsMove[sID].Push(new Vector3(nextMove.Key + .5f, nextMove.Value + .5f, 0));
+            lastMove = new KeyValuePair<int, int>(gridX, gridY);
+            return true;
+        } else if (dirs == 1)
+        {
+            deadend++;
+        }
+        return false;
+    }
+
+    public void aStar(int sID, int origX, int origY, int distX, int distY)
+    {
         //initialize the open list, initialize the closed list
         List<Node> open = new List<Node>();
         List<Node> closed = new List<Node>();
         Node dist = new Node();
+        int lowestHVal = 1000;
+        KeyValuePair<int, int> lowHSpot = new KeyValuePair<int, int>();
+        KeyValuePair<int, int> lowHParent = new KeyValuePair<int, int>();
 
         //put the starting node on the open list(its g = 0, parent = null)
         open.Add(new Node(origX, origY, -1, -1, -1, distX, distY));
@@ -181,30 +232,40 @@ public class SnaillingScript : MonoBehaviour {
 
                 if (!foundGoal && !foundOpen && !foundClosed)
                 { //otherwise, add the node to the open list
-                    Node temp = n;
                     open.Add(n);
+                    if (BasicMap.hVals[n.y][n.x] < lowestHVal)
+                    {
+                        // new lowestHVal
+                        lowestHVal = BasicMap.hVals[n.y][n.x];
+                        lowHSpot = new KeyValuePair<int, int>(n.x, n.y);
+                        lowHParent = new KeyValuePair<int, int>(n.p_x, n.p_y);
+                    }
                 }
             }
             closed.Add(q);
         }
         
-        if (dist.x != -1)
+        if (!foundGoal) // dist not found, default to lowest h
         {
-            //sMoveLocks[sID] = true;
-            while (dist.p_x != -1 || dist.p_y != -1) {
-                snaillingsMove[sID].Push(new Vector3(dist.x + .5f, dist.y + .5f, 0));
-			    dist.x = dist.p_x;
-                dist.y = dist.p_y;
-			    for (int i = 0; i < closed.Count; i++) {
-				    if (closed[i].x == dist.p_x && closed[i].y == dist.p_y) {
-                        dist.p_x = closed[i].p_x;
-                        dist.p_y = closed[i].p_y;
-				    }
-			    }
-		    }
-            //sMoveLocks[sID] = false;
+            dist.x = lowHSpot.Key;
+            dist.y = lowHSpot.Value;
+            dist.p_x = lowHParent.Key;
+            dist.p_y = lowHParent.Value;
         }
-        isSnailfinding = false;
+        while (dist.p_x != -1 || dist.p_y != -1)
+        {
+            snaillingsMove[sID].Push(new Vector3(dist.x + .5f, dist.y + .5f, 0));
+            dist.x = dist.p_x;
+            dist.y = dist.p_y;
+            for (int i = 0; i < closed.Count; i++)
+            {
+                if (closed[i].x == dist.p_x && closed[i].y == dist.p_y)
+                {
+                    dist.p_x = closed[i].p_x;
+                    dist.p_y = closed[i].p_y;
+                }
+            }
+        }
     }
 
     bool searchList(List<Node> l, Node n)
