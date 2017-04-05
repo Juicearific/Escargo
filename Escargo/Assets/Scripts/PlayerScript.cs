@@ -19,15 +19,20 @@ public class PlayerScript : MonoBehaviour {
     public float moveSpeed = 2f; //Movement speed of snail.
     public Slider slider;
     public int numSnailingsSaved = 0;
-    public Text snaillingLabel;
     public string minimapKey = "q";
+	public GameObject snaillingPanel;
+	public int playerID = 1;
+	public string snailType = "pierre";
+	public Color playerColor;
 
     void Start()
     {
-        // slider.maxValue = SLIME_MAX;
+        slider.maxValue = SLIME_MAX;
+		slider.fillRect.GetComponent<UnityEngine.UI.Image> ().color = playerColor;
         c = gameObject.GetComponentInChildren<Camera>();
         baseCullingMask = c.cullingMask;
 		storedSpeed = moveSpeed;
+		Camera.main.GetComponent<GlobalScript>().setSnaillingDisplay (playerID, snailType, snaillingPanel, playerColor);
     }
 
     void Update()

@@ -7,10 +7,11 @@ using System.Threading;
 public class MoveScript : MonoBehaviour
 {
     /* Constants */
+	private const int NUM_SLIME_SPRITES = 6;
 
     /* Public Variables */
     public GameObject[] otherPlayers;
-    public GameObject[] slimeSprites = new GameObject[6];
+    public GameObject[] slimeSprites = new GameObject[NUM_SLIME_SPRITES];
     // 0 - Dottrail
     // 1 - Singletrail
     // 2 - Sidetrail
@@ -27,6 +28,13 @@ public class MoveScript : MonoBehaviour
 
     /* Private Variables */
     private bool placeSlime = true;
+
+	void Start() {
+		//Set color of slime trails
+		for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
+			slimeSprites [i].GetComponent<SpriteRenderer> ().color = GetComponent<PlayerScript> ().playerColor;
+		}
+	}
 
     void Update()
     {
@@ -82,7 +90,7 @@ public class MoveScript : MonoBehaviour
         int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
         if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0 && slimeAmt >= 0)
         {
-            GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<SnaillingScript>().playerID;
+            GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
 
             foreach (GameObject oP in otherPlayers)
@@ -119,7 +127,7 @@ public class MoveScript : MonoBehaviour
             bool left = false;
             bool right = false;
             bool down = false;
-            int id = GetComponent<SnaillingScript>().playerID;
+            int id = GetComponent<PlayerScript>().playerID;
             int[,] grid = GetComponent<SnaillingScript>().slimeGrid;
             // Set up the adjacencies
             if (x - 1 >= 0 && grid[x - 1, y] == id)
@@ -127,7 +135,7 @@ public class MoveScript : MonoBehaviour
                 left = true;
                 updateSlime(x - 1, y, depth + 1);
             }
-            if (x + 1 <= SnaillingScript.WIDTH && grid[x + 1, y] == id)
+            if (x + 1 < SnaillingScript.WIDTH && grid[x + 1, y] == id)
             {
                 right = true;
                 updateSlime(x + 1, y, depth + 1);
@@ -137,7 +145,7 @@ public class MoveScript : MonoBehaviour
                 down = true;
                 updateSlime(x, y - 1, depth + 1);
             }
-            if (y + 1 <= SnaillingScript.HEIGHT && grid[x, y + 1] == id)
+            if (y + 1 < SnaillingScript.HEIGHT && grid[x, y + 1] == id)
             {
                 up = true;
                 updateSlime(x, y + 1, depth + 1);

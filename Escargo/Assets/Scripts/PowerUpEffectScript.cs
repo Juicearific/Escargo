@@ -45,10 +45,8 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
 
     private void generateDisplay()
     {
-        generatedDisplay = Instantiate(Resources.Load<GameObject>("PowerUpTimer"));//Get Prefab from Resources folder
-        Vector3 scale = generatedDisplay.transform.localScale;
-        generatedDisplay.transform.SetParent(gameObject.transform.GetComponentInChildren<HorizontalLayoutGroup>().gameObject.transform);
-        generatedDisplay.transform.localScale = scale;
+        generatedDisplay = Instantiate(Resources.Load<GameObject>("Prefabs/PowerUpTimer"));//Get Prefab from Resources folder
+        generatedDisplay.transform.SetParent(gameObject.transform.GetComponentInChildren<HorizontalLayoutGroup>().gameObject.transform, false);
         generatedDisplay.GetComponentInChildren<RawImage>().texture = getImage();
         generatedDisplay.GetComponentInChildren<Text>().text = powerUpDur.ToString() + "s";
     }
