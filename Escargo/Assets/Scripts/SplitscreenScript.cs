@@ -7,7 +7,7 @@ public class SplitscreenScript : MonoBehaviour {
     public Camera cam1;
     public Camera cam2;
     public Camera cam3;
-    public Camera cam4;
+	public Camera cam4;
 
 	// Use this for initialization
 	void Start ()
@@ -20,14 +20,14 @@ public class SplitscreenScript : MonoBehaviour {
         else if (numCameras == 2)
         {
             cam1.rect = new Rect(0, 0, .5f, 1);
-            cam2.rect = new Rect(.505f, 0, .5f, 1);
+            cam2.rect = new Rect(.5f, 0, .5f, 1);
         } else if (numCameras >= 3) {
-            cam1.rect = new Rect(0, .51f, .5f, .49f);
-            cam2.rect = new Rect(.505f,.51f,.5f,.49f);
-            cam3.rect = new Rect(0,0,.5f,.49f);
+            cam1.rect = new Rect(0, .5f, .5f, .45f);
+            cam2.rect = new Rect(.5f,.5f,.5f,.5f);
+            cam3.rect = new Rect(0,0,.5f,.5f);
             if (numCameras == 4)
             {
-                cam4.rect = new Rect(.505f, 0, .5f, .49f);
+                cam4.rect = new Rect(.5f, 0, .5f, .5f);
             } else {
                 // set cam4 to minimap???
             }
