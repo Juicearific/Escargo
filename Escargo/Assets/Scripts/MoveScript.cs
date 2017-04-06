@@ -244,19 +244,29 @@ public class MoveScript : MonoBehaviour
             }
 
         }
-
     }
 
 	void OnCollisionEnter2D(Collision2D collision) {
 		//Shelling - Display Animation for Shell Collision here.
 		float pushback_force = 0.5f;
 		if (collision.gameObject.tag == "Player") {
+			Vector2 currentPos = gameObject.transform.localPosition;
 			Vector2 direction = collision.contacts[0].point - new Vector2(transform.position.x, transform.position.y);
 			direction = -direction.normalized;
 			float savedSpeed = gameObject.GetComponent<PlayerScript> ().moveSpeed;
 			gameObject.GetComponent<PlayerScript> ().moveSpeed = 0;
 			gameObject.GetComponent<Rigidbody2D>().AddForce(direction * pushback_force);
+			StartCoroutine (checkForOutOfBounds ());
 			StartCoroutine(pushBackStun(savedSpeed)); //Stun after push back
+		}
+	}
+	IEnumerator checkForOutOfBounds() {
+		yield return new WaitForSeconds (0.05f);
+		if (gameObject.transform.localPosition.x < 0) {
+			gameObject.transform.localPosition = new Vector2(1.0f, gameObject.transform.localPosition.y);
+		}
+		if (gameObject.transform.localPosition.y > 24.5) {
+			gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, 24.5f);
 		}
 	}
 
