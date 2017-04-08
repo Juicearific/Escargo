@@ -120,6 +120,7 @@ public class SnaillingScript : MonoBehaviour {
                             snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
                             snailPathThread.Start();
                             while (!snailPathThread.IsAlive);
+                            while (snailPathThread.IsAlive);
                         }
                     }
                     //Debug.Log(snaillingsMove[i].Count);
