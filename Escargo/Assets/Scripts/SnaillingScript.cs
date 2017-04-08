@@ -89,37 +89,41 @@ public class SnaillingScript : MonoBehaviour {
             moveTimer = 0f;
             for (int i = 0; i < currentSnail; i++)
             {
-                int oX = (int)snaillings[i].transform.position.x;
-                int oY = (int)snaillings[i].transform.position.y;
-                bool simple = findSimplePath(i, oX, oY);
-                Debug.Log("deadends: " + deadend);
-                if (snailPathThread != null)
+                if (snaillings[i] != null)
                 {
-                    Debug.Log("currently astaring: " + snailPathThread.IsAlive);
-                }
-                Debug.Log("simple: " +simple);
-                if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive))
-                {
-                    // no simple path found, run AI
-                    snaillingsMove[i].Clear();
-                    KeyValuePair<int, int> n = closestNode[0];
-                    if (!(oX == n.Key && oY == n.Value))
+                    int oX = (int)snaillings[i].transform.position.x;
+                    int oY = (int)snaillings[i].transform.position.y;
+                    bool simple = findSimplePath(i, oX, oY);
+                    if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive))
                     {
-                        Debug.Log("Pathing from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
-                        snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
-                        snailPathThread.Start();
+                        if (deadend > 5) {
+                            deadend = 0;
+                        }
+                        // no simple path found, run AI
+                        snaillingsMove[i].Clear();
+                        KeyValuePair<int, int> n = closestNode[0];
+                        if (!(oX == n.Key && oY == n.Value))
+                        {
+                            Debug.Log("Pathing from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
+                            snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
+                            snailPathThread.Start();
+                            while (!snailPathThread.IsAlive);
+                        }
                     }
-                }
-                if (snaillingsMove[i].Count > 0)
-                {
-                    snaillings[i].transform.position = snaillingsMove[i].Pop(); // actually make move
-                    /*Lerp:
-                        * Vector3 origPos = snaillings [i].transform.position;
-                    Vector3 newPos = snaillingsMove [i].Pop ();
-                    float speed = 15f;
-                    float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
-                    snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
-                    */
+                    Debug.Log(snaillingsMove[i].Count);
+                    if (snaillingsMove[i].Count > 0)
+                    {
+                        lastMove[i] = new KeyValuePair<int, int>(oX, oY);
+                        Vector3 newPos = snaillingsMove[i].Pop();
+                        Debug.Log(newPos);
+                        snaillings[i].transform.position = newPos; // actually make move
+                        /*Lerp:
+                            * Vector3 origPos = snaillings [i].transform.position;
+                        float speed = 15f;
+                        float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
+                        snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
+                        */
+                    }
                 }
             }
         }
@@ -166,13 +170,11 @@ public class SnaillingScript : MonoBehaviour {
             }
             dirs++;
         }
-        Debug.Log(dirs);
-        Debug.Log("lastMove: " + lastMove[sID].Key + "," + lastMove[sID].Value);
+        //Debug.Log("lastMove: " + lastMove[sID].Key + "," + lastMove[sID].Value);
         if (dirs == 2)
         {
             // only one path (aka only forward and backwards)
             snaillingsMove[sID].Push(new Vector3(nextMove.Key + .5f, nextMove.Value + .5f, 0));
-            lastMove[sID] = new KeyValuePair<int, int>(gridX, gridY);
             deadend = 0;
             return true;
         } else if (dirs == 1)
@@ -278,6 +280,7 @@ public class SnaillingScript : MonoBehaviour {
                 }
             }
         }
+        Debug.Log("count at end fo astar: " +snaillingsMove[sID].Count);
     }
 
     bool searchList(List<Node> l, Node n)
