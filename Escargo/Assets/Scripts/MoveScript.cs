@@ -74,8 +74,7 @@ public class MoveScript : MonoBehaviour
     {
         if (placeSlime)
             setSlime();
-        /*slimeBox.text = "Slime: " + GetComponent<PlayerScript>().slime + "/100";*/
-        float mSpeed = GetComponent<PlayerScript>().moveSpeed;
+		float mSpeed = GetComponent<PlayerScript>().getMoveSpeed();
         GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
         GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
@@ -87,7 +86,7 @@ public class MoveScript : MonoBehaviour
         int snails = GetComponent<SnaillingScript>().currentSnail;
         GameObject[] snaillings = GetComponent<SnaillingScript>().snaillings;
 
-        int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
+		int slimeAmt = GetComponent<PlayerScript>().getSlime() - PlayerScript.SLIME_COST;
         if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0 && slimeAmt >= 0)
         {
             GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
@@ -113,7 +112,7 @@ public class MoveScript : MonoBehaviour
                 GetComponent<SnaillingScript>().closestNode.Insert(0, n);
             }
             
-            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
+			GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
             slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
             updateSlime(gridX, gridY, 0);
         }
@@ -253,8 +252,8 @@ public class MoveScript : MonoBehaviour
 			Vector2 currentPos = gameObject.transform.localPosition;
 			Vector2 direction = collision.contacts[0].point - new Vector2(transform.position.x, transform.position.y);
 			direction = -direction.normalized;
-			float savedSpeed = gameObject.GetComponent<PlayerScript> ().moveSpeed;
-			gameObject.GetComponent<PlayerScript> ().moveSpeed = 0;
+			float savedSpeed = gameObject.GetComponent<PlayerScript> ().getMoveSpeed();
+			gameObject.GetComponent<PlayerScript> ().setMoveSpeed(0);
 			gameObject.GetComponent<Rigidbody2D>().AddForce(direction * pushback_force);
 			StartCoroutine (checkForOutOfBounds ());
 			StartCoroutine(pushBackStun(savedSpeed)); //Stun after push back
@@ -273,7 +272,7 @@ public class MoveScript : MonoBehaviour
 	IEnumerator pushBackStun(float storedSpeed)
 	{
 		yield return new WaitForSeconds(1);
-		gameObject.GetComponent<PlayerScript> ().moveSpeed = storedSpeed;
+		gameObject.GetComponent<PlayerScript> ().setMoveSpeed(storedSpeed);
 		//Remove Animation for Shell Collision here.
 	}
 }

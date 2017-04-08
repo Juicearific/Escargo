@@ -14,10 +14,12 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
     public float powerUpDur = 5.0f; //5 Seconds
     private float secondsLeft;
     public Coroutine currentCoroutine;
-    public GameObject generatedDisplay;
+	public GameObject generatedDisplay = null;
+	public PlayerScript player;
 
 	void Start ()
     {
+		player = GetComponent<PlayerScript> ();
         addEffect();
         secondsLeft = powerUpDur;
         generateDisplay();
@@ -34,7 +36,9 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
         }
         
     }
-
+	public void setPrefab(GameObject displayPrefab) {
+		generatedDisplay = displayPrefab;
+	}
     IEnumerator powerUpTimer(float timer)
     {
         yield return new WaitForSeconds(timer);
@@ -45,9 +49,10 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
 
     private void generateDisplay()
     {
-        generatedDisplay = Instantiate(Resources.Load<GameObject>("Prefabs/PowerUpTimer"));//Get Prefab from Resources folder
+		if (generatedDisplay == null) {
+			Debug.LogError("Please send a prefab into the power up effect script.");
+		}
         generatedDisplay.transform.SetParent(gameObject.transform.GetComponentInChildren<HorizontalLayoutGroup>().gameObject.transform, false);
-        generatedDisplay.GetComponentInChildren<RawImage>().texture = getImage();
         generatedDisplay.GetComponentInChildren<Text>().text = powerUpDur.ToString() + "s";
     }
 
@@ -59,5 +64,4 @@ public abstract class PowerUpEffectScript : MonoBehaviour {
             Destroy(generatedDisplay);
         }
     }
-    public abstract Texture getImage();
 }

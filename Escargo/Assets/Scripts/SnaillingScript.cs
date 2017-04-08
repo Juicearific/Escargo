@@ -113,7 +113,6 @@ public class SnaillingScript : MonoBehaviour {
 					KeyValuePair<int, int> n = closestNode [0];
 					int oX = (int)snaillings [i].transform.position.x;
 					int oY = (int)snaillings [i].transform.position.y;
-                    Debug.Log("Pathing from " + oX + ","+oY+ " to " + n.Key + "," + n.Value);
 					Thread snailPathThread = new Thread (() => findPath (i, oX, oY, n.Key, n.Value));
 					snailPathThread.Start ();
 				}
