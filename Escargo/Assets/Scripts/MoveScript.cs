@@ -84,13 +84,11 @@ public class MoveScript : MonoBehaviour
     {
         int gridX = (int)GetComponent<Transform>().position.x;
         int gridY = (int)GetComponent<Transform>().position.y;
-        int snails = GetComponent<SnaillingScript>().currentSnail;
-        GameObject[] snaillings = GetComponent<SnaillingScript>().snaillings;
 
         int slimeAmt = GetComponent<PlayerScript>().slime - PlayerScript.SLIME_COST;
-        if (GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] == 0 && slimeAmt >= 0)
+        if (SnaillingScript.slimeGrid[gridX, gridY] == 0 && slimeAmt >= 0)
         {
-            GetComponent<SnaillingScript>().slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
+            SnaillingScript.slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
 
             foreach (GameObject oP in otherPlayers)
@@ -128,7 +126,7 @@ public class MoveScript : MonoBehaviour
             bool right = false;
             bool down = false;
             int id = GetComponent<PlayerScript>().playerID;
-            int[,] grid = GetComponent<SnaillingScript>().slimeGrid;
+            int[,] grid = SnaillingScript.slimeGrid;
             // Set up the adjacencies
             if (x - 1 >= 0 && grid[x - 1, y] == id)
             {
