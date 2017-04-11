@@ -15,8 +15,28 @@ public class MainMenuController : MonoBehaviour {
 		
 	}
 
-    public void PlayGame()
+    public void LoadGame()
     {
         SceneManager.LoadScene("Demo");
+    }
+
+    public void LoadCharacterSelect()
+    {
+        SceneManager.LoadScene("CharacterSelect");
+    }
+
+    public void LoadCredits()
+    {
+        SceneManager.LoadScene("Credits");
+    }
+
+    public void LoadInstructions()
+    {
+        SceneManager.LoadScene("HowToPlay");
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
