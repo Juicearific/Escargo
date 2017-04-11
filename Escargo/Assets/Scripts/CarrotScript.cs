@@ -7,17 +7,12 @@ public class CarrotScript : PowerUpEffectScript {
     
     public override void addEffect()
     {
-        gameObject.GetComponent<PlayerScript>().moveSpeed += 2f;
+		player.setMoveSpeed(player.getMoveSpeed() + (2f * player.powerUpEffects["Carrot"]));
     }
 
     public override void removeEffect()
     {
         base.removeEffect();
-        gameObject.GetComponent<PlayerScript>().moveSpeed -= 2f;
-    }
-
-    public override Texture getImage()
-    {
-        return Resources.Load<Texture>("Art/Pickups/carrot_small");
+		player.setMoveSpeed(player.getMoveSpeed() - (2f * player.powerUpEffects["Carrot"]));
     }
 }

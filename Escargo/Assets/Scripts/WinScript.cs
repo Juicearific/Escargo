@@ -14,15 +14,16 @@ public class WinScript : MonoBehaviour
 				GameObject snaillingsPlayer = findPlayer(playerID);
 				if (snaillingsPlayer != null)
 				{
+					PlayerScript player = snaillingsPlayer.GetComponent<PlayerScript> ();
 					/* Change GUI to reflect that a snailling made it */
-					snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved++; //Increment number of snailings saved for player
-					Camera.main.GetComponent<GlobalScript>().changeDisplay(playerID, snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved);
+					player.incrementSnaillingsSaved (); //Increment number of snailings saved for player
+					Camera.main.GetComponent<GlobalScript>().changeDisplay(playerID, player.getSnaillingsSaved());
 
 					/* Destroy the snailling */
 					destroySnailling(collider.gameObject, snaillingsPlayer.GetComponent<SnaillingScript>().snaillings);
 
 					/* Check win condition */
-					if (snaillingsPlayer.GetComponent<PlayerScript>().numSnailingsSaved >= SnaillingScript.NUM_SNAILLINGS)
+					if (player.getSnaillingsSaved() >= SnaillingScript.NUM_SNAILLINGS)
 					{
 						SceneManager.LoadScene("MainMenu");
 					}

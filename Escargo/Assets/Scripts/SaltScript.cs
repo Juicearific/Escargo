@@ -23,17 +23,13 @@ public class SaltScript : PowerUpEffectScript
     {
         for (int i = 0; i < numOfTics; i++)
         {
-            int slimeAmt = GetComponent<PlayerScript>().slime - slimeTic;
+			slimeTic = (int) (slimeTic * player.powerUpEffects ["Salt"]);
+			int slimeAmt = player.getSlime() - slimeTic;
             if (slimeAmt < 0) slimeAmt = 0;
-            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
+			player.changeSlimeBar(slimeAmt);
 
             yield return new WaitForSeconds(ticDuration);
         }
         yield return null; 
-    }
-
-    public override Texture getImage()
-    {
-        return Resources.Load<Texture>("Art/Pickups/Salt_small");
     }
 }
