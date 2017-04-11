@@ -23,17 +23,13 @@ public class WaterScript : PowerUpEffectScript
     {
         for (int i = 0; i < numOfTics; i++)
         {
-            int slimeAmt = GetComponent<PlayerScript>().slime + slimeTic;
-            if (slimeAmt > PlayerScript.SLIME_MAX) slimeAmt = PlayerScript.SLIME_MAX;
-            GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
+			slimeTic = (int) (slimeTic * player.powerUpEffects ["Water"]);
+			int slimeAmt = player.getSlime() + (int)slimeTic;
+			if (slimeAmt > player.SLIME_MAX) slimeAmt = player.SLIME_MAX;
+			player.changeSlimeBar(slimeAmt);
 
             yield return new WaitForSeconds(ticDuration);
         }
         yield return null;
-    }
-
-    public override Texture getImage()
-    {
-        return Resources.Load<Texture>("Art/Pickups/water_small");
     }
 }
