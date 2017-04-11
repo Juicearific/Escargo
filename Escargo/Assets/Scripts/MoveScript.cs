@@ -28,12 +28,14 @@ public class MoveScript : MonoBehaviour
 
     /* Private Variables */
     private bool placeSlime = true;
+	private Animator anim;
 
 	void Start() {
 		//Set color of slime trails
 		for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
 			slimeSprites [i].GetComponent<SpriteRenderer> ().color = GetComponent<PlayerScript> ().playerColor;
 		}
+		anim = GetComponent<Animator>();
 	}
 
     void Update()
@@ -50,19 +52,22 @@ public class MoveScript : MonoBehaviour
         /* movement */
         if (Input.GetKey(rightKey))
         {
+			anim.SetInteger ("Direction", 1);
             moveChar(Vector2.right);
         }
         else if (Input.GetKey(downKey))
         {
+			anim.SetInteger ("Direction", 4);
             moveChar(Vector2.down);
         }
         else if (Input.GetKey(leftKey))
         {
+			anim.SetInteger ("Direction", 2);
             moveChar(Vector2.left);
         }
         else if (Input.GetKey(upKey))
         {
-
+			anim.SetInteger ("Direction", 3);
             moveChar(Vector2.up);
         }
         else {
@@ -247,6 +252,7 @@ public class MoveScript : MonoBehaviour
 		//Shelling - Display Animation for Shell Collision here.
 		float pushback_force = 0.5f;
 		if (collision.gameObject.tag == "Player") {
+			anim.Play ("shelling");
 			Vector2 currentPos = gameObject.transform.localPosition;
 			Vector2 direction = collision.contacts[0].point - new Vector2(transform.position.x, transform.position.y);
 			direction = -direction.normalized;
