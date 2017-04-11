@@ -9,20 +9,15 @@ public class CopperScript : PowerUpEffectScript
     
     public override void addEffect()
     {
-        powerUpDur = 2; // Change duration to 2 seconds.
-        movementSpeed = gameObject.GetComponent<PlayerScript>().moveSpeed;
-        gameObject.GetComponent<PlayerScript>().moveSpeed = 0;
+		powerUpDur = 2 * player.powerUpEffects ["Copper"]; // Change duration to 2 seconds.
+		movementSpeed = player.getMoveSpeed();
+		player.setMoveSpeed(0);
     }
 
     public override void removeEffect()
     {
         base.removeEffect();
-        gameObject.GetComponent<PlayerScript>().moveSpeed += movementSpeed;
+		player.setMoveSpeed(player.getMoveSpeed() + movementSpeed);
         //Added instead of set just incase a movement speed boost wore off while it is stunned.
-    }
-
-    public override Texture getImage()
-    {
-        return Resources.Load<Texture>("Art/Pickups/copper_ring_small");
     }
 }
