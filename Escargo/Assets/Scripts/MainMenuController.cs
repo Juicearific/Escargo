@@ -39,4 +39,9 @@ public class MainMenuController : MonoBehaviour {
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void LoadOptions()
+    {
+        SceneManager.LoadScene("Options");
+    }
 }
