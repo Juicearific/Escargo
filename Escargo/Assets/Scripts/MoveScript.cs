@@ -20,19 +20,26 @@ public class MoveScript : MonoBehaviour
     // 5 - Quadtrail
     public GameObject[,] slimeObjGrid = new GameObject[SnaillingScript.WIDTH, SnaillingScript.HEIGHT];
     /*public Text slimeBox;*/
-    public string upKey = "w";
-    public string downKey = "s";
-    public string leftKey = "a";
-    public string rightKey = "d";
-    public string slimeKey = "e";
+    public KeyCode upCode;
+    public KeyCode downCode;
+    public KeyCode leftCode;
+    public KeyCode rightCode;
+    public KeyCode slimeCode;
+    public KeyCode mapCode;
 
     /* Private Variables */
     private bool placeSlime = true;
 	private Animator anim;
 
 	void Start() {
-		//Set color of slime trails
-		for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
+        //Set KeyCodes for the snails
+        upCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 0];
+        leftCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 1];
+        rightCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 2];
+        downCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 3];
+        slimeCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 4];
+        //Set color of slime trails
+        for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
 			slimeSprites [i].GetComponent<SpriteRenderer> ().color = GetComponent<PlayerScript> ().playerColor;
 		}
 		anim = GetComponent<Animator>();
@@ -41,7 +48,7 @@ public class MoveScript : MonoBehaviour
     void Update()
     {
         /* Slime Trigger */
-        if (Input.GetKeyUp(slimeKey))
+        if (Input.GetKeyDown(slimeCode))
         {
             placeSlime = !placeSlime;
         }
@@ -50,22 +57,22 @@ public class MoveScript : MonoBehaviour
     void FixedUpdate()
     {
         /* movement */
-        if (Input.GetKey(rightKey))
+        if (Input.GetKey(rightCode))
         {
 			anim.SetInteger ("Direction", 1);
             moveChar(Vector2.right);
         }
-        else if (Input.GetKey(downKey))
+        else if (Input.GetKey(downCode))
         {
 			anim.SetInteger ("Direction", 4);
             moveChar(Vector2.down);
         }
-        else if (Input.GetKey(leftKey))
+        else if (Input.GetKey(leftCode))
         {
 			anim.SetInteger ("Direction", 2);
             moveChar(Vector2.left);
         }
-        else if (Input.GetKey(upKey))
+        else if (Input.GetKey(upCode))
         {
 			anim.SetInteger ("Direction", 3);
             moveChar(Vector2.up);

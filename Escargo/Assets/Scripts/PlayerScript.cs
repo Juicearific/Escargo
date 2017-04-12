@@ -22,7 +22,8 @@ public class PlayerScript : MonoBehaviour {
     /* Public Variables */
 	public Slider slider;
 	public GameObject snaillingPanel;
-    public string minimapKey = "q";
+    //public string minimapKey = "q";
+    public KeyCode minimapCode;
 	public int playerID = 1;
 	public string snailType = "pierre";
 	public Color playerColor;
@@ -41,6 +42,7 @@ public class PlayerScript : MonoBehaviour {
 
     void Start()
     {
+        minimapCode = OptionsStaticScript.controls[playerID - 1, 5];
 		slime = SLIME_MAX;
 		moveSpeed = MOVE_SPEED;
 		setupTraits ();
@@ -54,7 +56,7 @@ public class PlayerScript : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyUp(minimapKey))
+        if (Input.GetKey(minimapCode))
         {
             minimapActive = !minimapActive;
             if (!minimapActive)
