@@ -34,18 +34,19 @@ public class SelectScript : MonoBehaviour {
             p1Index = 0;
         }
         p1Img.sprite = imgs[p1Index];
-        OptionsStaticScript.p3Name = updateSprite(p3Index);
+        OptionsStaticScript.p1Name = updateSprite(p1Index);
     }
 
     public void p1Left()
     {
+        Debug.Log("Ffuck you");
         p1Index--;
         if (p1Index < 0)
         {
             p1Index = 4;
         }
         p1Img.sprite = imgs[p1Index];
-        OptionsStaticScript.p3Name = updateSprite(p3Index);
+        OptionsStaticScript.p1Name = updateSprite(p1Index);
     }
 
     public void p2Right()
@@ -56,7 +57,7 @@ public class SelectScript : MonoBehaviour {
             p2Index = 0;
         }
         p2Img.sprite = imgs[p2Index];
-        OptionsStaticScript.p3Name = updateSprite(p3Index);
+        OptionsStaticScript.p2Name = updateSprite(p2Index);
     }
 
     public void p2Left()
@@ -67,7 +68,7 @@ public class SelectScript : MonoBehaviour {
             p2Index = 4;
         }
         p2Img.sprite = imgs[p2Index];
-        OptionsStaticScript.p3Name = updateSprite(p3Index);
+        OptionsStaticScript.p2Name = updateSprite(p2Index);
     }
 
     public void p3Right()
