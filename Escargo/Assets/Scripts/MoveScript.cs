@@ -97,7 +97,7 @@ public class MoveScript : MonoBehaviour
         int gridY = (int)GetComponent<Transform>().position.y;
 
         int slimeAmt = GetComponent<PlayerScript>().getSlime() - PlayerScript.SLIME_COST;
-        if (slimeAmt >= 0)
+        if (SnaillingScript.slimeGrid[gridX, gridY] != GetComponent<PlayerScript>().playerID && slimeAmt >= 0)
         {
             SnaillingScript.slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
