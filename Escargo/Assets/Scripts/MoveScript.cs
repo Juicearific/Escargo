@@ -90,15 +90,6 @@ public class MoveScript : MonoBehaviour
             SnaillingScript.slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
 
-			foreach (PlayerScript oP in GlobalScript.getPlayers())
-            {
-				if (oP != null) {
-					if (oP.gameObject.GetComponent<SnaillingScript> ().closestNode.Contains (n)) {
-						oP.gameObject.GetComponent<SnaillingScript> ().closestNode.Remove (n);
-					}
-				}
-            }
-
             if (GetComponent<SnaillingScript>().closestNode.Count > 0)
             {
                 KeyValuePair<int, int> closeN = GetComponent<SnaillingScript>().closestNode[0];

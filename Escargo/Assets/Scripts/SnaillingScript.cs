@@ -28,7 +28,7 @@ public class Node
 
 	public int distance(int otherX, int otherY)
     {
-        int dist = Mathf.Abs(otherX - x) + Mathf.Abs(otherY - y); // Manhatten distance
+        int dist = Mathf.Abs(otherX - x) + Mathf.Abs(otherY - y);
         return dist;
     }
 };
@@ -88,7 +88,8 @@ public class SnaillingScript : MonoBehaviour {
 				spawnTimer = 0f;
 				snaillings [currentSnail].transform.position = new Vector3 (snaillings [currentSnail].transform.position.x,
 					snaillings [currentSnail].transform.position.y, 0);
-				snaillings [currentSnail].tag = "P" + GetComponent<PlayerScript> ().playerID.ToString () + "Snailling";
+                Debug.Log(snaillings[currentSnail].transform.position);
+                snaillings [currentSnail].tag = "P" + GetComponent<PlayerScript> ().playerID.ToString () + "Snailling";
 				currentSnail++;
 			}
 			/* snailings move */
@@ -100,6 +101,7 @@ public class SnaillingScript : MonoBehaviour {
 						int oX = (int)snaillings [i].transform.position.x;
 						int oY = (int)snaillings [i].transform.position.y;
 						bool simple = findSimplePath (i, oX, oY);
+                        Debug.Log(simple);
 						if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive)) {
 							if (deadend > 5) {
 								deadend = 0;
@@ -110,12 +112,11 @@ public class SnaillingScript : MonoBehaviour {
 							}
 							KeyValuePair<int, int> n = closestNode [0];
 							if (!(oX == n.Key && oY == n.Value)) {
-								snailPathThread = new Thread (() => aStar (i, oX, oY, n.Key, n.Value));
+                                //Debug.Log("pathfinding from " + oX +","+oY + " to " +n.Key + "," +n.Value);
+                                snailPathThread = new Thread (() => aStar (i, oX, oY, n.Key, n.Value));
 								snailPathThread.Start ();
-								while (!snailPathThread.IsAlive)
-									;
-								while (snailPathThread.IsAlive)
-									;
+								while (!snailPathThread.IsAlive);
+								while (snailPathThread.IsAlive);
 							}
 						}
 
@@ -130,13 +131,14 @@ public class SnaillingScript : MonoBehaviour {
 							lock (snaillingsMove) {
 								newPos = snaillingsMove [i].Pop ();
 							}
-							snaillings [i].transform.position = newPos; // actually make move
+                            //Debug.Log("newPos: " + newPos.x + "," + newPos.y);
+                            snaillings [i].transform.position = newPos; // actually make move
 							/*Lerp:
-                            * Vector3 origPos = snaillings [i].transform.position;
-                        float speed = 15f;
-                        float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
-                        snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
-                        */
+                            Vector3 origPos = snaillings [i].transform.position;
+                            float speed = 15f;
+                            float smooth = 1.0f - Mathf.Pow (0.5f, Time.deltaTime * speed);
+                            snaillings [i].transform.position = Vector3.Slerp (origPos, newPos, smooth);
+                            */
 						}
 					}
 				}
@@ -147,10 +149,6 @@ public class SnaillingScript : MonoBehaviour {
     bool findSimplePath(int sID, int gridX, int gridY)
     {
         int dirs = 0;
-        if (gridX < 2)
-        {
-            dirs++; // so it looks like there's two directions from start
-        }
         KeyValuePair<int, int> nextMove = new KeyValuePair<int, int>();
 		if (gridX + 1 < WIDTH && slimeGrid[gridX + 1, gridY] == playerID)
         {
