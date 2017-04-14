@@ -24,7 +24,7 @@ public class PlayerScript : MonoBehaviour {
 	public GameObject snaillingPanel;
     //public string minimapKey = "q";
     public KeyCode minimapCode;
-	public int playerID = 1;
+	public int playerID;
 	public string snailType = "pierre";
 	public Color playerColor;
 	/*
@@ -51,12 +51,11 @@ public class PlayerScript : MonoBehaviour {
         c = gameObject.GetComponentInChildren<Camera>();
         baseCullingMask = c.cullingMask;
 		storedSpeed = moveSpeed;
-		Camera.main.GetComponent<GlobalScript>().setSnaillingDisplay (playerID, snailType, snaillingPanel, playerColor);
     }
 
     void Update()
     {
-        if (Input.GetKey(minimapCode))
+        if (Input.GetKeyUp(minimapCode))
         {
             minimapActive = !minimapActive;
             if (!minimapActive)

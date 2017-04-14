@@ -7,17 +7,9 @@ using System.Threading;
 public class MoveScript : MonoBehaviour
 {
     /* Constants */
-	private const int NUM_SLIME_SPRITES = 6;
+	public const int NUM_SLIME_SPRITES = 6;
 
     /* Public Variables */
-    public GameObject[] otherPlayers;
-    public GameObject[] slimeSprites = new GameObject[NUM_SLIME_SPRITES];
-    // 0 - Dottrail
-    // 1 - Singletrail
-    // 2 - Sidetrail
-    // 3 - Cornertrail
-    // 4 - Tritrail
-    // 5 - Quadtrail
     public GameObject[,] slimeObjGrid = new GameObject[SnaillingScript.WIDTH, SnaillingScript.HEIGHT];
     /*public Text slimeBox;*/
     public KeyCode upCode;
@@ -25,9 +17,15 @@ public class MoveScript : MonoBehaviour
     public KeyCode leftCode;
     public KeyCode rightCode;
     public KeyCode slimeCode;
-    public KeyCode mapCode;
 
-    /* Private Variables */
+	/* Private Variables */
+	private GameObject[] slimeSprites = new GameObject[NUM_SLIME_SPRITES];
+	// 0 - Dottrail
+	// 1 - Singletrail
+	// 2 - Sidetrail
+	// 3 - Cornertrail
+	// 4 - Tritrail
+	// 5 - Quadtrail
     private bool placeSlime = true;
 	private Animator anim;
 
@@ -38,10 +36,6 @@ public class MoveScript : MonoBehaviour
         rightCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 2];
         downCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 3];
         slimeCode = OptionsStaticScript.controls[GetComponent<PlayerScript>().playerID - 1, 4];
-        //Set color of slime trails
-        for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
-			slimeSprites [i].GetComponent<SpriteRenderer> ().color = GetComponent<PlayerScript> ().playerColor;
-		}
 		anim = GetComponent<Animator>();
 	}
 
@@ -56,30 +50,24 @@ public class MoveScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        /* movement */
-        if (Input.GetKey(rightCode))
-        {
-			anim.SetInteger ("Direction", 1);
-            moveChar(Vector2.right);
-        }
-        else if (Input.GetKey(downCode))
-        {
-			anim.SetInteger ("Direction", 4);
-            moveChar(Vector2.down);
-        }
-        else if (Input.GetKey(leftCode))
-        {
-			anim.SetInteger ("Direction", 2);
-            moveChar(Vector2.left);
-        }
-        else if (Input.GetKey(upCode))
-        {
-			anim.SetInteger ("Direction", 3);
-            moveChar(Vector2.up);
-        }
-        else {
-            moveChar(Vector2.zero);
-        }
+		if (GlobalScript.Ready && GetComponent<SnaillingScript>().Ready) {
+			/* movement */
+			if (Input.GetKey (rightCode)) {
+				anim.SetInteger ("Direction", 1);
+				moveChar (Vector2.right);
+			} else if (Input.GetKey (downCode)) {
+				anim.SetInteger ("Direction", 4);
+				moveChar (Vector2.down);
+			} else if (Input.GetKey (leftCode)) {
+				anim.SetInteger ("Direction", 2);
+				moveChar (Vector2.left);
+			} else if (Input.GetKey (upCode)) {
+				anim.SetInteger ("Direction", 3);
+				moveChar (Vector2.up);
+			} else {
+				moveChar (Vector2.zero);
+			}
+		}
     }
 
     void moveChar(Vector2 targetVelocity)
@@ -102,12 +90,13 @@ public class MoveScript : MonoBehaviour
             SnaillingScript.slimeGrid[gridX, gridY] = GetComponent<PlayerScript>().playerID;
             KeyValuePair<int, int> n = new KeyValuePair<int, int>(gridX, gridY);
 
-            foreach (GameObject oP in otherPlayers)
+			foreach (PlayerScript oP in GlobalScript.getPlayers())
             {
-                if (oP.GetComponent<SnaillingScript>().closestNode.Contains(n))
-                {
-                    oP.GetComponent<SnaillingScript>().closestNode.Remove(n);
-                }
+				if (oP != null) {
+					if (oP.gameObject.GetComponent<SnaillingScript> ().closestNode.Contains (n)) {
+						oP.gameObject.GetComponent<SnaillingScript> ().closestNode.Remove (n);
+					}
+				}
             }
 
             if (GetComponent<SnaillingScript>().closestNode.Count > 0)
@@ -285,6 +274,15 @@ public class MoveScript : MonoBehaviour
 		yield return new WaitForSeconds(1);
 		gameObject.GetComponent<PlayerScript> ().setMoveSpeed(storedSpeed);
 		//Remove Animation for Shell Collision here.
+	}
+	public void setSlimeSprites(GameObject[] sprites) {
+		slimeSprites = sprites;
+	}
+	public void updateColors() {
+		//Set color of slime trails
+		for (int i = 0; i < NUM_SLIME_SPRITES; i++) {
+			slimeSprites [i].GetComponent<SpriteRenderer> ().color = GetComponent<PlayerScript> ().playerColor;
+		}
 	}
 }
 	

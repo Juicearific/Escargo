@@ -10,7 +10,7 @@ public class SplitscreenScript : MonoBehaviour {
 	public Camera cam4;
 
 	// Use this for initialization
-	void Start ()
+	public void initCameras ()
     {
         Physics2D.IgnoreLayerCollision(9, 9, true);
         if (numCameras == 1)
@@ -22,7 +22,7 @@ public class SplitscreenScript : MonoBehaviour {
             cam1.rect = new Rect(0, 0, .5f, 1);
             cam2.rect = new Rect(.5f, 0, .5f, 1);
         } else if (numCameras >= 3) {
-            cam1.rect = new Rect(0, .5f, .5f, .45f);
+            cam1.rect = new Rect(0, .5f, .5f, .5f);
             cam2.rect = new Rect(.5f,.5f,.5f,.5f);
             cam3.rect = new Rect(0,0,.5f,.5f);
             if (numCameras == 4)

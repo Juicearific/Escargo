@@ -42,6 +42,6 @@ public class MainMenuController : MonoBehaviour {
 
     public void LoadOptions()
     {
-        SceneManager.LoadScene("Options");
+        SceneManager.LoadScene("OptionsMenu");
     }
 }
