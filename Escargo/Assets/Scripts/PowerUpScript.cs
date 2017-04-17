@@ -30,10 +30,12 @@ public class PowerUpScript : MonoBehaviour
 	public PowerUpType powerUp;
 	private int respawnTime = 5;
 	// 5 seconds
-
-	void Start() {
+	private void generateRandomPowerUp() {
 		powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
 		GetComponent<SpriteRenderer> ().sprite = images [(int)powerUp];
+	}
+	void Start() {
+		generateRandomPowerUp ();
 	}
 	void OnTriggerEnter2D (Collider2D collider)
 	{
@@ -109,6 +111,7 @@ public class PowerUpScript : MonoBehaviour
 	IEnumerator respawn ()
 	{
 		yield return new WaitForSeconds (respawnTime);
+		generateRandomPowerUp ();
 		setActive (true);
 	}
 }
