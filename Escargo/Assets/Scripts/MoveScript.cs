@@ -26,7 +26,8 @@ public class MoveScript : MonoBehaviour
 	// 3 - Cornertrail
 	// 4 - Tritrail
 	// 5 - Quadtrail
-    private bool placeSlime = true;
+    private bool placeSlime = true; //Player's toggle for slime
+	private bool blockSlime = false; //System's ability to block laying of slime, regardless of player will.
 	private Animator anim;
 
 	void Start() {
@@ -72,7 +73,7 @@ public class MoveScript : MonoBehaviour
 
     void moveChar(Vector2 targetVelocity)
     {
-        if (placeSlime)
+        if (placeSlime && !blockSlime)
             setSlime();
 		float mSpeed = GetComponent<PlayerScript>().getMoveSpeed();
         GetComponent<Rigidbody2D>().velocity = targetVelocity * mSpeed;
@@ -240,7 +241,7 @@ public class MoveScript : MonoBehaviour
 		float pushback_force = 0.5f;
 		if (collision.gameObject.tag == "Player") {
 			anim.Play ("shelling");
-			Vector2 currentPos = gameObject.transform.localPosition;
+			blockSlime = true;
 			Vector2 direction = collision.contacts[0].point - new Vector2(transform.position.x, transform.position.y);
 			direction = -direction.normalized;
 			float savedSpeed = gameObject.GetComponent<PlayerScript> ().getMoveSpeed();
@@ -255,8 +256,14 @@ public class MoveScript : MonoBehaviour
 		if (gameObject.transform.localPosition.x < 0) {
 			gameObject.transform.localPosition = new Vector2(1.0f, gameObject.transform.localPosition.y);
 		}
-		if (gameObject.transform.localPosition.y > 24.5) {
-			gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, 24.5f);
+		if (gameObject.transform.localPosition.x > SnaillingScript.WIDTH) {
+			gameObject.transform.localPosition = new Vector2(SnaillingScript.WIDTH - 1.0f, gameObject.transform.localPosition.y);
+		}
+		if (gameObject.transform.localPosition.y > SnaillingScript.HEIGHT) {
+			gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, SnaillingScript.HEIGHT - 1.0f);
+		}
+		if (gameObject.transform.localPosition.y < 0) {
+			gameObject.transform.localPosition = new Vector2(gameObject.transform.localPosition.x, 1.0f);
 		}
 	}
 
@@ -264,7 +271,7 @@ public class MoveScript : MonoBehaviour
 	{
 		yield return new WaitForSeconds(1);
 		gameObject.GetComponent<PlayerScript> ().setMoveSpeed(storedSpeed);
-		//Remove Animation for Shell Collision here.
+		blockSlime = false;
 	}
 	public void setSlimeSprites(GameObject[] sprites) {
 		slimeSprites = sprites;

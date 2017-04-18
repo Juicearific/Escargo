@@ -57,6 +57,7 @@ public class SnaillingScript : MonoBehaviour {
     private float snailStartX;
     private float snailStartY;
     private int deadend = 0;
+	private bool astarActive = false;
     Thread snailPathThread;
 
     void Start()
@@ -88,7 +89,6 @@ public class SnaillingScript : MonoBehaviour {
 				spawnTimer = 0f;
 				snaillings [currentSnail].transform.position = new Vector3 (snaillings [currentSnail].transform.position.x,
 					snaillings [currentSnail].transform.position.y, 0);
-                Debug.Log(snaillings[currentSnail].transform.position);
                 snaillings [currentSnail].tag = "P" + GetComponent<PlayerScript> ().playerID.ToString () + "Snailling";
 				currentSnail++;
 			}
@@ -101,8 +101,7 @@ public class SnaillingScript : MonoBehaviour {
 						int oX = (int)snaillings [i].transform.position.x;
 						int oY = (int)snaillings [i].transform.position.y;
 						bool simple = findSimplePath (i, oX, oY);
-                        Debug.Log(simple);
-						if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive)) {
+						if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !astarActive)) {
 							if (deadend > 5) {
 								deadend = 0;
 							}
@@ -112,11 +111,10 @@ public class SnaillingScript : MonoBehaviour {
 							}
 							KeyValuePair<int, int> n = closestNode [0];
 							if (!(oX == n.Key && oY == n.Value)) {
-                                //Debug.Log("pathfinding from " + oX +","+oY + " to " +n.Key + "," +n.Value);
                                 snailPathThread = new Thread (() => aStar (i, oX, oY, n.Key, n.Value));
+								astarActive = true;
 								snailPathThread.Start ();
-								while (!snailPathThread.IsAlive);
-								while (snailPathThread.IsAlive);
+								while (astarActive);
 							}
 						}
 
@@ -131,7 +129,6 @@ public class SnaillingScript : MonoBehaviour {
 							lock (snaillingsMove) {
 								newPos = snaillingsMove [i].Pop ();
 							}
-                            //Debug.Log("newPos: " + newPos.x + "," + newPos.y);
                             snaillings [i].transform.position = newPos; // actually make move
 							/*Lerp:
                             Vector3 origPos = snaillings [i].transform.position;
@@ -297,8 +294,8 @@ public class SnaillingScript : MonoBehaviour {
                 }
             }
         }
-        //Debug.Log("count at end fo astar: " +snaillingsMove[sID].Count);
-    }
+		astarActive = false;
+	}
 
     bool searchList(List<Node> l, Node n)
     {
