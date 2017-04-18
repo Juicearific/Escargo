@@ -270,7 +270,7 @@ public class MoveScript : MonoBehaviour
 	IEnumerator pushBackStun(float storedSpeed)
 	{
 		yield return new WaitForSeconds(1);
-		gameObject.GetComponent<PlayerScript> ().setMoveSpeed(storedSpeed);
+		gameObject.GetComponent<PlayerScript> ().setMoveSpeed(gameObject.GetComponent<PlayerScript>().getMoveSpeed() + storedSpeed);
 		blockSlime = false;
 	}
 	public void setSlimeSprites(GameObject[] sprites) {
