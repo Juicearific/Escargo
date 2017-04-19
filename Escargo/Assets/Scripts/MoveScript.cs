@@ -10,7 +10,7 @@ public class MoveScript : MonoBehaviour
 	public const int NUM_SLIME_SPRITES = 6;
 
     /* Public Variables */
-    public GameObject[,] slimeObjGrid = new GameObject[SnaillingScript.WIDTH, SnaillingScript.HEIGHT];
+    public static GameObject[,] slimeObjGrid = new GameObject[SnaillingScript.WIDTH, SnaillingScript.HEIGHT];
     /*public Text slimeBox;*/
     public KeyCode upCode;
     public KeyCode downCode;
@@ -104,6 +104,7 @@ public class MoveScript : MonoBehaviour
             }
             
 			GetComponent<PlayerScript>().changeSlimeBar(slimeAmt);
+            Destroy(slimeObjGrid[gridX, gridY]);
             slimeObjGrid[gridX, gridY] = GameObject.Instantiate(slimeSprites[0], new Vector3(((float)gridX) + .5f, ((float)gridY) + .5f, 0), Quaternion.identity);
             updateSlime(gridX, gridY, 0);
         }
