@@ -31,7 +31,7 @@ public class SelectScript : MonoBehaviour {
         p1Index++;
         if (p1Index > 4)
         {
-            p1Index = 0;
+            p1Index = 1;
         }
         p1Img.sprite = imgs[p1Index];
         OptionsStaticScript.p1Name = updateSprite(p1Index);
@@ -39,9 +39,8 @@ public class SelectScript : MonoBehaviour {
 
     public void p1Left()
     {
-        Debug.Log("Ffuck you");
         p1Index--;
-        if (p1Index < 0)
+        if (p1Index < 1)
         {
             p1Index = 4;
         }
@@ -54,7 +53,7 @@ public class SelectScript : MonoBehaviour {
         p2Index++;
         if (p2Index > 4)
         {
-            p2Index = 0;
+            p2Index = 1;
         }
         p2Img.sprite = imgs[p2Index];
         OptionsStaticScript.p2Name = updateSprite(p2Index);
@@ -63,7 +62,7 @@ public class SelectScript : MonoBehaviour {
     public void p2Left()
     {
         p2Index--;
-        if (p2Index < 0)
+        if (p2Index < 1)
         {
             p2Index = 4;
         }
