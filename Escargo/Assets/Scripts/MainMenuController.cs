@@ -44,4 +44,9 @@ public class MainMenuController : MonoBehaviour {
     {
         SceneManager.LoadScene("OptionsMenu");
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }
