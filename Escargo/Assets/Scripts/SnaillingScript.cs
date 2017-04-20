@@ -283,7 +283,7 @@ public class SnaillingScript : MonoBehaviour {
             dist.p_y = lowHParent.Value;
         }
         if (!(origX == dist.x && origY == dist.y)) { // do not astar to current pos
-            while (dist.p_x != -1 || dist.p_y != -1)
+            while (dist.p_x > 0 && dist.p_y > 0)
             {
                 lock (snaillingsMove)
                 {
