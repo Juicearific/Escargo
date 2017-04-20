@@ -117,7 +117,11 @@ public class SnaillingScript : MonoBehaviour {
                                     snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
                                     astarActive = true;
                                     snailPathThread.Start();
-                                    while (astarActive) ;
+                                    while (astarActive);
+                                    /*if (!snailPathThread.IsAlive)
+                                    {
+                                        snailPathThread.Abort();
+                                    }*/
                                 }
                             }
 
@@ -205,10 +209,12 @@ public class SnaillingScript : MonoBehaviour {
         //initialize the open list, initialize the closed list
         List<Node> open = new List<Node>();
         List<Node> closed = new List<Node>();
-        Node dist = new Node();
-        int lowestHVal = 1000;
         KeyValuePair<int, int> lowHSpot = new KeyValuePair<int, int>();
         KeyValuePair<int, int> lowHParent = new KeyValuePair<int, int>();
+        Node dist = new Node();
+        int lowestHVal = BasicMap.hVals[origX][origY];
+        lowHSpot = new KeyValuePair<int, int>(origX, origY);
+        
 
         //put the starting node on the open list(its g = 0, parent = null)
         open.Add(new Node(origX, origY, -1, -1, -1, distX, distY));
@@ -302,6 +308,7 @@ public class SnaillingScript : MonoBehaviour {
             }
         }
 		astarActive = false;
+        
 	}
 
     bool searchList(List<Node> l, Node n)
