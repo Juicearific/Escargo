@@ -47,6 +47,9 @@ public class MoveScript : MonoBehaviour
         {
             placeSlime = !placeSlime;
         }
+		if (Input.GetKeyUp(KeyCode.Escape)) {
+			Camera.main.GetComponent<StopGameScript>().openExitWindow();
+		}
     }
 
     void FixedUpdate()
