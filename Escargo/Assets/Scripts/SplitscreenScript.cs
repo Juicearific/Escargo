@@ -8,6 +8,7 @@ public class SplitscreenScript : MonoBehaviour {
     public Camera cam2;
     public Camera cam3;
 	public Camera cam4;
+	public Camera minimapCamera;//Default position is 24.5, 12.5, -10.
 
 	// Use this for initialization
 	public void initCameras ()
@@ -22,6 +23,7 @@ public class SplitscreenScript : MonoBehaviour {
             cam1.rect = new Rect(0, 0, .5f, 1);
             cam2.rect = new Rect(.5f, 0, .5f, 1);
         } else if (numCameras >= 3) {
+			minimapCamera.transform.position = new Vector3 (24.5f, 12.5f, -5f);
             cam1.rect = new Rect(0, .5f, .5f, .5f);
             cam2.rect = new Rect(.5f,.5f,.5f,.5f);
             cam3.rect = new Rect(0,0,.5f,.5f);
@@ -29,7 +31,7 @@ public class SplitscreenScript : MonoBehaviour {
             {
                 cam4.rect = new Rect(.5f, 0, .5f, .5f);
             } else {
-                // set cam4 to minimap???
+				minimapCamera.rect = new Rect (.5f, 0, .5f, .5f);
             }
         }
 	}

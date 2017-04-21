@@ -108,6 +108,15 @@ public class GlobalScript : MonoBehaviour {
 			numCameras++;
 		}
 		SplitscreenScript.numCameras = numCameras;
+		if (numCameras > 2) {
+			for (int i = 0; i < NUM_PLAYERS; i++) {
+				snaillingDisplayPrefabs [i].transform.localScale = new Vector3 (.7f, .7f, 1f);
+			}
+		} else {
+			for (int i = 0; i < NUM_PLAYERS; i++) {
+				snaillingDisplayPrefabs [i].transform.localScale = new Vector3 (1f, 1f, 1f);
+			}
+		}
 		script.initCameras ();
 	}
 
