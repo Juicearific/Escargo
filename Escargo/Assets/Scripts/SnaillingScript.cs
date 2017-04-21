@@ -57,7 +57,6 @@ public class SnaillingScript : MonoBehaviour {
     private float snailStartX;
     private float snailStartY;
     private int deadend = 0;
-	private bool astarActive = false;
     Thread snailPathThread;
 
     void Start()
@@ -104,24 +103,18 @@ public class SnaillingScript : MonoBehaviour {
                         }
                         int oX = (int)snaillings [i].transform.position.x;
 						int oY = (int)snaillings [i].transform.position.y;
-                        if (slimeGrid[oX, oY] == playerID) {
+						if (slimeGrid[oX, oY] == playerID) {
                             bool simple = findSimplePath(i, oX, oY);
-                            if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !astarActive)) {
+							if (!simple && (deadend <= 1 || deadend > 5) && (snailPathThread == null || !snailPathThread.IsAlive)) {
                                 if (deadend > 5) {
                                     deadend = 0;
                                 }
                                 // no simple path found, run AI
                                 KeyValuePair<int, int> n = closestNode[0];
                                 if (!(oX == n.Key && oY == n.Value)) {
-                                    Debug.Log("pathfinding from " + oX + "," + oY + " to " + n.Key + "," + n.Value);
                                     snailPathThread = new Thread(() => aStar(i, oX, oY, n.Key, n.Value));
-                                    astarActive = true;
                                     snailPathThread.Start();
-                                    while (astarActive);
-                                    /*if (!snailPathThread.IsAlive)
-                                    {
-                                        snailPathThread.Abort();
-                                    }*/
+									snailPathThread.Join ();
                                 }
                             }
 
@@ -187,6 +180,7 @@ public class SnaillingScript : MonoBehaviour {
                 nextMove = new KeyValuePair<int, int>(gridX - 1, gridY);
             }
             dirs++;
+
         }
         if (dirs == 2)
         {
@@ -212,14 +206,13 @@ public class SnaillingScript : MonoBehaviour {
         KeyValuePair<int, int> lowHSpot = new KeyValuePair<int, int>();
         KeyValuePair<int, int> lowHParent = new KeyValuePair<int, int>();
         Node dist = new Node();
-        int lowestHVal = BasicMap.hVals[origX][origY];
+        int lowestHVal = BasicMap.hVals[origY][origX];
         lowHSpot = new KeyValuePair<int, int>(origX, origY);
-        
 
         //put the starting node on the open list(its g = 0, parent = null)
         open.Add(new Node(origX, origY, -1, -1, -1, distX, distY));
 
-        bool foundGoal = false;
+		bool foundGoal = false;
         while (open.Count != 0 && !foundGoal) {
             //find the node with the least f on the open list, call it "q"
             Node q = open[0];
@@ -252,7 +245,6 @@ public class SnaillingScript : MonoBehaviour {
             { // check for node left
                 succ.Add(new Node(q.x, q.y - 1, q.x, q.y, q.g, distX, distY));
             }
-
             foreach (Node n in succ)
             {
                 if (n.x == distX && n.y == distY)
@@ -280,7 +272,6 @@ public class SnaillingScript : MonoBehaviour {
             }
             closed.Add(q);
         }
-
         if (!foundGoal) // dist not found, default to lowest h
         {
             dist.x = lowHSpot.Key;
@@ -289,10 +280,10 @@ public class SnaillingScript : MonoBehaviour {
             dist.p_y = lowHParent.Value;
         }
         if (!(origX == dist.x && origY == dist.y)) { // do not astar to current pos
-            while (dist.p_x > 0 && dist.p_y > 0)
+            while (dist.p_x >= 0 && dist.p_y >= 0)
             {
                 lock (snaillingsMove)
-                {
+				{
                     snaillingsMove[sID].Push(new Vector3(dist.x + .5f, dist.y + .5f, 0));
                 }
                 dist.x = dist.p_x;
@@ -307,8 +298,6 @@ public class SnaillingScript : MonoBehaviour {
                 }
             }
         }
-		astarActive = false;
-        
 	}
 
     bool searchList(List<Node> l, Node n)
