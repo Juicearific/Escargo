@@ -40,7 +40,6 @@ public class PowerUpScript : MonoBehaviour
 		if (negativePowerUp ()) {
 			while (negativePowerUp ()) {
 				powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
-				Debug.Log (powerUp.ToString ());
 			}
 		} else {
 			powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
