@@ -37,7 +37,12 @@ public class PowerUpScript : MonoBehaviour
 
 	private void generateRandomPowerUp() {
 		// If it is a negative power up, make sure it comes back as a positive one next.
-		while (negativePowerUp()) {
+		if (negativePowerUp ()) {
+			while (negativePowerUp ()) {
+				powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
+				Debug.Log (powerUp.ToString ());
+			}
+		} else {
 			powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
 		}
 		GetComponent<SpriteRenderer> ().sprite = images [(int)powerUp];
