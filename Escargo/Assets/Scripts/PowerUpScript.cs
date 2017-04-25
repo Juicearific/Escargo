@@ -30,10 +30,19 @@ public class PowerUpScript : MonoBehaviour
 	public PowerUpType powerUp;
 	private int respawnTime = 5;
 	// 5 seconds
+
+	private bool negativePowerUp() {
+		return powerUp == PowerUpType.Copper || powerUp == PowerUpType.Sugar || powerUp == PowerUpType.Salt;
+	}
+
 	private void generateRandomPowerUp() {
-		powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
+		// If it is a negative power up, make sure it comes back as a positive one next.
+		while (negativePowerUp()) {
+			powerUp = (PowerUpType)UnityEngine.Random.Range (0, NUM_POWERUPS);
+		}
 		GetComponent<SpriteRenderer> ().sprite = images [(int)powerUp];
 	}
+
 	void Start() {
 		generateRandomPowerUp ();
 	}

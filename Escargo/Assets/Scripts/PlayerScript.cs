@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading;
 
 public class PlayerScript : MonoBehaviour {
     /* Constants */
@@ -17,11 +18,12 @@ public class PlayerScript : MonoBehaviour {
 	private int slime; //Slime remaining in slime bar. Initialized to be SLIME_MAX.
 	private float moveSpeed; //Movement speed of snail.
 	private int numSnailingsSaved = 0;
+	private float regenTimer = 3.0f;
+	private float timeTracker = 0.0f;
 
     /* Public Variables */
 	public Slider slider;
 	public GameObject snaillingPanel;
-    //public string minimapKey = "q";
     public KeyCode minimapCode;
 	public int playerID;
 	public string snailType = "pierre";
@@ -71,6 +73,19 @@ public class PlayerScript : MonoBehaviour {
             }
         }
 
+		if (snailType == "kenta") {
+			//regen effect for kenta.
+			timeTracker += Time.deltaTime;
+			if (timeTracker >= regenTimer) {
+				timeTracker = 0.0f;
+				int new_slime = slime + 1;
+				if (new_slime > SLIME_MAX)
+					changeSlimeBar (SLIME_MAX);
+				else
+					changeSlimeBar (new_slime);
+			}
+		}
+
 		if (minimapActive)
 			c.transform.position = Camera.main.GetComponent<SplitscreenScript> ().minimapCamera.transform.position;
     }
@@ -117,4 +132,5 @@ public class PlayerScript : MonoBehaviour {
 	public void setMoveSpeed(float val) {
 		moveSpeed = val;
 	}
+
 }
