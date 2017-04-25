@@ -20,4 +20,21 @@ public class OptionsStaticScript : MonoBehaviour
     public static string p2Name = "kenta";
     public static string p3Name = "n/a";
     public static string p4Name = "n/a";
+
+    public static bool hasDupe(KeyCode code)
+    {
+        bool loc = false;
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (controls[i,j] == code)
+                {
+                    loc = true;
+                }
+            }
+        }
+
+        return loc;
+    }
 }

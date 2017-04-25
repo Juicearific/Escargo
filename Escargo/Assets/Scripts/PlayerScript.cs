@@ -12,7 +12,6 @@ public class PlayerScript : MonoBehaviour {
     /* Private Variables */
     private bool minimapActive = false;
     private int baseCullingMask;
-    private Vector3 minimapPosition = new Vector3(24.5f,12.5f,-6.0f);
     private Camera c;
 	private float storedSpeed;
 	private int slime; //Slime remaining in slime bar. Initialized to be SLIME_MAX.
@@ -72,8 +71,8 @@ public class PlayerScript : MonoBehaviour {
             }
         }
 
-        if (minimapActive)
-            c.transform.position = minimapPosition;
+		if (minimapActive)
+			c.transform.position = Camera.main.GetComponent<SplitscreenScript> ().minimapCamera.transform.position;
     }
 
     public void changeSlimeBar(int amt)

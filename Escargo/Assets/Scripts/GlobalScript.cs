@@ -38,6 +38,10 @@ public class GlobalScript : MonoBehaviour {
 	public void changeDisplay(int playerID, int newSnaillingCount) {
 		for (int i = 0; i < NUM_PLAYERS; i++) {
 			if (players [i] != null) {
+				if (newSnaillingCount == 1) {
+					Color c = new Color (players [playerID - 1].playerColor.r, players [playerID - 1].playerColor.g, players [playerID - 1].playerColor.b, 255);
+					playersSnaillingDisplays [players [i].snaillingPanel] [playerID - 1].GetComponentInChildren<UnityEngine.UI.Slider> ().fillRect.GetComponent<UnityEngine.UI.Image> ().color = c;
+				}
 				playersSnaillingDisplays[players[i].snaillingPanel][playerID - 1].GetComponentInChildren<UnityEngine.UI.Text> ().text = newSnaillingCount.ToString ()
 				+ "/" + SnaillingScript.NUM_SNAILLINGS.ToString ();
 				playersSnaillingDisplays[players[i].snaillingPanel][playerID - 1].GetComponentInChildren<UnityEngine.UI.Slider> ().value = newSnaillingCount;
@@ -104,6 +108,15 @@ public class GlobalScript : MonoBehaviour {
 			numCameras++;
 		}
 		SplitscreenScript.numCameras = numCameras;
+		if (numCameras > 2) {
+			for (int i = 0; i < NUM_PLAYERS; i++) {
+				snaillingDisplayPrefabs [i].transform.localScale = new Vector3 (.7f, .7f, 1f);
+			}
+		} else {
+			for (int i = 0; i < NUM_PLAYERS; i++) {
+				snaillingDisplayPrefabs [i].transform.localScale = new Vector3 (1f, 1f, 1f);
+			}
+		}
 		script.initCameras ();
 	}
 
@@ -124,7 +137,9 @@ public class GlobalScript : MonoBehaviour {
 							prefab = Instantiate (snaillingDisplayPrefabs [BIGBERTHA]);
 						}
 						prefab.transform.SetParent (players [i].snaillingPanel.transform, false);
-						prefab.GetComponentInChildren<UnityEngine.UI.Slider> ().fillRect.GetComponent<UnityEngine.UI.Image> ().color = players [j].playerColor;
+						Color c = new Color (players [j].playerColor.r, players [j].playerColor.g, players [j].playerColor.b, 0);
+						prefab.GetComponentInChildren<UnityEngine.UI.Slider> ().fillRect.GetComponent<UnityEngine.UI.Image> ().color = c;
+						prefab.GetComponentInChildren<UnityEngine.UI.Text> ().text = "0/" + SnaillingScript.NUM_SNAILLINGS.ToString ();
 						prefabs [j] = prefab;
 					}
 				}
