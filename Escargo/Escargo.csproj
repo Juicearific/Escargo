@@ -52,6 +52,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -67,25 +70,36 @@
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>Library\UnityAssemblies\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BasicMap.cs" />
     <Compile Include="Assets\Scripts\CarrotScript.cs" />
+    <Compile Include="Assets\Scripts\ControlsScript.cs" />
     <Compile Include="Assets\Scripts\CopperScript.cs" />
+    <Compile Include="Assets\Scripts\GlobalScript.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\MoveScript.cs" />
+    <Compile Include="Assets\Scripts\OptionsStaticScript.cs" />
     <Compile Include="Assets\Scripts\PlayerScript.cs" />
     <Compile Include="Assets\Scripts\PowerUpEffectScript.cs" />
     <Compile Include="Assets\Scripts\PowerUpScript.cs" />
     <Compile Include="Assets\Scripts\SaltScript.cs" />
+    <Compile Include="Assets\Scripts\SelectScript.cs" />
     <Compile Include="Assets\Scripts\SnaillingScript.cs" />
     <Compile Include="Assets\Scripts\SplitscreenScript.cs" />
+    <Compile Include="Assets\Scripts\StopGameScript.cs" />
     <Compile Include="Assets\Scripts\WaterScript.cs" />
     <Compile Include="Assets\Scripts\WinScript.cs" />
     <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\ImportBehaviour.cs" />
