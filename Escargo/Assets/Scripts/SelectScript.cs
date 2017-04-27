@@ -143,13 +143,13 @@ public class SelectScript : MonoBehaviour {
         }
         else if (index == 3)
         {
-            GetComponent<PlayVoiceLines>().playLine("bertha", 3);
-            return "bertha";
+            GetComponent<PlayVoiceLines>().playLine("liljim", 3);
+            return "liljim";
         }
         else // (index == 4)
         {
-            GetComponent<PlayVoiceLines>().playLine("liljim", 3);
-            return "liljim";
+            GetComponent<PlayVoiceLines>().playLine("bertha", 3);
+            return "bertha";
         }
     }
 
