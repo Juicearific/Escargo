@@ -9,6 +9,10 @@ public class WinScript : MonoBehaviour
 	public static int winningPlayerID;
 	public static string winningPlayerSnailType;
 
+	void Start() {
+		winner = false;
+	}
+
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag.Contains("Snailling") && !winner)
 		{
