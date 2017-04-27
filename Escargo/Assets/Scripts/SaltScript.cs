@@ -10,6 +10,7 @@ public class SaltScript : PowerUpEffectScript
     public override void addEffect()
     {
         int numOfTics = Mathf.FloorToInt(powerUpDur / ticDuration);
+        player.GetComponent<PlayerScript>().playSalt();
         StartCoroutine(tic(numOfTics));
     }
 

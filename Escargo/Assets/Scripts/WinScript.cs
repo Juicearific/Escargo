@@ -25,7 +25,8 @@ public class WinScript : MonoBehaviour
 					/* Check win condition */
 					if (player.getSnaillingsSaved() >= SnaillingScript.NUM_SNAILLINGS)
 					{
-						SceneManager.LoadScene("MainMenu");
+                        snaillingsPlayer.GetComponent<PlayerScript>().playWin();
+                        SceneManager.LoadScene("MainMenu");
 					}
 				}
 			}

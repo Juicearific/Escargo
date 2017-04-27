@@ -119,8 +119,21 @@ public class PlayerScript : MonoBehaviour {
 	}
 	public void incrementSnaillingsSaved() {
 		numSnailingsSaved++;
-	}
-	public int getSlime() {
+        GetComponent<PlayVoiceLines>().playLine(snailType, 0);
+    }
+    public void playWin()
+    {
+        GetComponent<PlayVoiceLines>().playLine(snailType, 4);
+    }
+    public void playSalt()
+    {
+        GetComponent<PlayVoiceLines>().playLine(snailType, 2);
+    }
+    public void playLoad(double t)
+    {
+        GetComponent<PlayVoiceLines>().playLoadLine(snailType, t);
+    }
+    public int getSlime() {
 		return slime;
 	}
 	public void setSlime(int value) {

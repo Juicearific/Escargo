@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GlobalScript : MonoBehaviour {
 	public const int NUM_PLAYERS = 4;
+    private double playTime = 0.0f;
 	private const int PIERRE = 0;
 	private const int KENTA = 1;
 	private const int LILJIM = 2;
@@ -58,24 +59,31 @@ public class GlobalScript : MonoBehaviour {
 
 	private void setupPlayer(string name, int ID) {
 		GameObject player = null;
+        double timeToAdd = 0.0f;
 		switch (name) {
 		case "n/a":
 			break;//No player selected
 		case "pierre":
 			player = Instantiate (snailPrefabs [PIERRE]);
-			break;
+            timeToAdd = 4.0f;
+            break;
 		case "kenta":
 			player = Instantiate (snailPrefabs [KENTA]);
-			break;
+            timeToAdd = 8.0f;
+            break;
 		case "liljim":
 			player = Instantiate (snailPrefabs [LILJIM]);
-			break;
+            timeToAdd = 3.0f;
+            break;
 		case "bertha":
 			player = Instantiate (snailPrefabs [BIGBERTHA]);
-			break;
+            timeToAdd = 2.0f;
+            break;
 		}
 		if (player != null) {
 			PlayerScript script = player.GetComponent<PlayerScript> ();
+            script.playLoad(AudioSettings.dspTime + playTime);
+            playTime += timeToAdd;
 			players [ID - 1] = script;
 			script.playerID = ID;
 			script.playerColor = colors [ID - 1];
