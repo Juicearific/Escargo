@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class WinScript : MonoBehaviour
 {
 	private static bool winner = false;
+	public static int winningPlayerID;
+	public static string winningPlayerSnailType;
+
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject.tag.Contains("Snailling") && !winner)
 		{
@@ -27,6 +30,8 @@ public class WinScript : MonoBehaviour
 					if (player.getSnaillingsSaved() >= SnaillingScript.NUM_SNAILLINGS)
 					{
 						winner = true; //Disable other snaillings from triggering a win.
+						winningPlayerID = playerID;
+						winningPlayerSnailType = player.snailType;
 						snaillingsPlayer.GetComponent<PlayerScript>().playWin();
                         StartCoroutine (displayWinScreen());
 					}
@@ -44,7 +49,7 @@ public class WinScript : MonoBehaviour
 			}
 		}
 		yield return new WaitForSeconds (5);
-		SceneManager.LoadScene ("MainMenu");
+		SceneManager.LoadScene ("WinScene");
 	}
 
     void destroySnailling(GameObject snailling, GameObject[] snaillings)
