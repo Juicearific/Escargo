@@ -43,6 +43,11 @@ public class ControlsScript : MonoBehaviour
 
     public void Start()
     {
+        updateAllFields();
+    }
+
+    public void updateAllFields()
+    {
         p1Up.text = OptionsStaticScript.controls[0, 0].ToString();
         p1Left.text = OptionsStaticScript.controls[0, 1].ToString();
         p1Right.text = OptionsStaticScript.controls[0, 2].ToString();
@@ -70,13 +75,17 @@ public class ControlsScript : MonoBehaviour
         p4Down.text = OptionsStaticScript.controls[3, 3].ToString();
         p4Slime.text = OptionsStaticScript.controls[3, 4].ToString();
         p4Map.text = OptionsStaticScript.controls[3, 5].ToString();
-
-
     }
 
     public void goHome()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void defaults()
+    {
+        OptionsStaticScript.reset();
+        updateAllFields();
     }
 
     void OnGUI()

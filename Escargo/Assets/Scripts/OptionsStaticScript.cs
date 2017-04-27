@@ -37,4 +37,12 @@ public class OptionsStaticScript : MonoBehaviour
 
         return loc;
     }
+
+    public static void reset()
+    {
+        controls = new KeyCode[4, 6] { { KeyCode.W, KeyCode.A, KeyCode.D, KeyCode.S, KeyCode.E, KeyCode.Q } ,
+                                                            {KeyCode.F, KeyCode.C, KeyCode.B, KeyCode.V, KeyCode.G, KeyCode.R},
+                                                            {KeyCode.U, KeyCode.H, KeyCode.K, KeyCode.J, KeyCode.I, KeyCode.Y},
+                                                            {KeyCode.L, KeyCode.Comma, KeyCode.Slash, KeyCode.Period, KeyCode.Semicolon, KeyCode.O } };
+    }
 }

@@ -18,7 +18,18 @@ public class SelectScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        p1Index = 1;
+        p1Img.sprite = imgs[p1Index];
+        p2Index = 2;
+        p2Img.sprite = imgs[p2Index];
+        p3Index = 0;
+        p3Img.sprite = imgs[p3Index];
+        p4Index = 0;
+        p4Img.sprite = imgs[p4Index];
+        OptionsStaticScript.p1Name = updateSprite(p1Index);
+        OptionsStaticScript.p2Name = updateSprite(p2Index);
+        OptionsStaticScript.p3Name = updateSprite(p3Index);
+        OptionsStaticScript.p4Name = updateSprite(p4Index);
 	}
 	
 	// Update is called once per frame
