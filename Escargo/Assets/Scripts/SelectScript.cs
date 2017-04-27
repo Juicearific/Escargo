@@ -133,18 +133,22 @@ public class SelectScript : MonoBehaviour {
         }
         else if(index == 1)
         {
+            GetComponent<PlayVoiceLines>().playLine("pierre", 3);
             return "pierre";
         }
         else if(index == 2)
         {
+            GetComponent<PlayVoiceLines>().playLine("kenta", 3);
             return "kenta";
         }
         else if (index == 3)
         {
+            GetComponent<PlayVoiceLines>().playLine("bertha", 3);
             return "bertha";
         }
         else // (index == 4)
         {
+            GetComponent<PlayVoiceLines>().playLine("liljim", 3);
             return "liljim";
         }
     }
